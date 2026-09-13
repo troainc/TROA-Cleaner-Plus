@@ -1,3 +1,10 @@
+# v1.0.0-alpha.2 - Fully Configurable Messaging
+
+- Made all player-facing text configurable in `TROA-CleanerPlus.cfg`: `WarningMessageTemplate`, `SummaryMessageTemplate`, `KeepHintMessage`, `RecoveryHintMessage`, and `PolicyMessageOverride`, plus `ShowKeepHintOnScan` and `ScanMaxLines`.
+- Templates support placeholders that are substituted at runtime: `{DisplayName}`, `{Module}`, `{Seconds}`, `{Count}`, `{MinBlocks}`, and `{NoCleanTag}`.
+- `!cleanerplus scan` now appends the configurable keep hint and recovery hint (toggle with `ShowKeepHintOnScan`) and honors `ScanMaxLines`; `!cleanerplus policy` uses `PolicyMessageOverride` when set, otherwise the auto-generated policy plus the configurable keep hint.
+- Interval pre-run warnings and the post-pass summary now use the configurable templates. All keep rules (beacon requirement, block minimum, rename requirement, default-name patterns, ownerless, no-functional, protection lists, GPS zones, and the no-clean tag) remain individually configurable as before.
+
 # v1.0.0-alpha.1 - First Build
 
 - Created TROA Cleaner+, a headless, toggleable, restart-free automated cleanup plugin for Torch Space Engineers servers.

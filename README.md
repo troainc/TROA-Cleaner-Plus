@@ -9,9 +9,9 @@ it keep the world clean without downtime.
 
 ## Current Release
 
-- Version: `v1.0.0-alpha.1`
-- Package: `TROA-CleanerPlus-v1.0.0-alpha.1.zip`
-- SHA-256: `D6E468B1A23B217E5CC3563D268C630F8140E25BD2838D8F3B2569616FD3B8AC`
+- Version: `v1.0.0-alpha.2`
+- Package: `TROA-CleanerPlus-v1.0.0-alpha.2.zip`
+- SHA-256: `37D4E46615A5EB339A21F7AC6EB8386F3992C508456DAADE97BA3F7BE1665853`
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
@@ -123,6 +123,13 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `BroadcastWarnings` | `true` | Broadcast a countdown before each interval pass. |
 | `BroadcastSummary` | `true` | Broadcast/log a summary after a pass. |
 | `WarningLeadSeconds` | `60, 30, 10` | Seconds-before-run at which warnings are sent. |
+| `WarningMessageTemplate` | `{DisplayName}: {Module} cleanup in {Seconds}s.` | Pre-run warning text. Placeholders: `{DisplayName}` `{Module}` `{Seconds}`. |
+| `SummaryMessageTemplate` | `{DisplayName}: cleaned {Count} {Module}.` | Post-pass summary text. Placeholders: `{DisplayName}` `{Count}` `{Module}`. |
+| `ShowKeepHintOnScan` | `true` | Append the keep hint + recovery hint to `!cleanerplus scan`. |
+| `ScanMaxLines` | `25` | Max lines listed by `!cleanerplus scan` before summarizing the rest. |
+| `KeepHintMessage` | (see cfg) | How players keep a grid. Placeholders: `{MinBlocks}` `{NoCleanTag}` `{DisplayName}`. |
+| `RecoveryHintMessage` | (see cfg) | Where removed grids can be recovered. Placeholder: `{DisplayName}`. |
+| `PolicyMessageOverride` | empty | Overrides `!cleanerplus policy` text when set; empty auto-generates it. |
 | `EnableGridvaultIntegration` | `true` | Capture removed grids into Gridvault+'s Cleanup Grids. |
 | `RequireGridvaultBackupBeforeDelete` | `true` | Never delete a grid that could not be backed up. |
 | `GridvaultCleanupReasonPrefix` | `TROA Cleaner+` | Text written into the Gridvault+ audit reason. |

@@ -31,6 +31,22 @@
     <int>10</int>
   </WarningLeadSeconds>
 
+  <!-- ===== Player-facing messages (fully customizable) =====
+       Placeholders in braces are substituted at runtime:
+       {DisplayName} {Module} {Seconds} {Count} {MinBlocks} {NoCleanTag} -->
+  <WarningMessageTemplate>{DisplayName}: {Module} cleanup in {Seconds}s.</WarningMessageTemplate>
+  <SummaryMessageTemplate>{DisplayName}: cleaned {Count} {Module}.</SummaryMessageTemplate>
+  <!-- Append the keep hint and recovery hint to !cleanerplus scan output. -->
+  <ShowKeepHintOnScan>true</ShowKeepHintOnScan>
+  <!-- Max lines listed by !cleanerplus scan before it summarizes the rest. -->
+  <ScanMaxLines>25</ScanMaxLines>
+  <!-- Shown to players so they know how to keep a grid. -->
+  <KeepHintMessage>To keep a grid: give it a Beacon, build it past {MinBlocks} blocks, rename it from the default name, or add {NoCleanTag} to its name.</KeepHintMessage>
+  <!-- Shown so players know where a removed grid can be recovered. -->
+  <RecoveryHintMessage>Removed grids are recoverable: check Gridvault+ with !gridvault find &lt;name&gt;, or the server's local Cleanup Grids backup folder.</RecoveryHintMessage>
+  <!-- Leave empty to auto-generate the !cleanerplus policy text from the active rules; set to override it. -->
+  <PolicyMessageOverride />
+
   <!-- ===== Gridvault+ integration (backup-before-delete) ===== -->
   <!-- Capture every removed grid into Gridvault+'s "Cleanup Grids" vault via its bridge API. -->
   <EnableGridvaultIntegration>true</EnableGridvaultIntegration>
