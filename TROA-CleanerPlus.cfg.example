@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!--
+  TROA Cleaner+ example configuration.
+
+  This file documents every setting. The live file is created next to the plugin as
+  "TROA-CleanerPlus.cfg" on first start. Edit that file and either save it (the plugin reloads
+  automatically) or run "!cleanerplusadmin reload" in game. No server restart is ever required.
+
+  SAFETY: GlobalDryRun ships ON. Nothing is deleted until you set it to false. Use
+  "!cleanerplus scan" to preview exactly what would be removed first.
+-->
+<CleanerConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- Master switch for the whole plugin. -->
+  <Enabled>true</Enabled>
+  <!-- Name shown in chat broadcasts and logs. -->
+  <DisplayName>Cleaner+</DisplayName>
+  <!-- When true, modules only REPORT what they would remove; nothing is deleted. -->
+  <GlobalDryRun>true</GlobalDryRun>
+  <!-- Grids/objects newer than this (minutes) are never touched. -->
+  <GracePeriodMinutes>15</GracePeriodMinutes>
+  <!-- Removals per simulation tick. Keep low so a big sweep never stalls the server. -->
+  <MaxRemovalsPerTick>2</MaxRemovalsPerTick>
+
+  <!-- Broadcast a warning countdown before each interval pass, and a summary after. -->
+  <BroadcastWarnings>true</BroadcastWarnings>
+  <BroadcastSummary>true</BroadcastSummary>
+  <!-- Seconds-before-run at which a warning is broadcast. -->
+  <WarningLeadSeconds>
+    <int>60</int>
+    <int>30</int>
+    <int>10</int>
+  </WarningLeadSeconds>
+
+  <!-- ===== Gridvault+ integration (backup-before-delete) ===== -->
+  <!-- Capture every removed grid into Gridvault+'s "Cleanup Grids" vault via its bridge API. -->
+  <EnableGridvaultIntegration>true</EnableGridvaultIntegration>
+  <!-- If a backup cannot be made, DO NOT delete the grid (skip and log). Strongly recommended. -->
+  <RequireGridvaultBackupBeforeDelete>true</RequireGridvaultBackupBeforeDelete>
+  <!-- Text written into the Gridvault+ audit reason. -->
+  <GridvaultCleanupReasonPrefix>TROA Cleaner+</GridvaultCleanupReasonPrefix>
+  <!-- If Gridvault+ is not installed, capture removed grids into Cleaner+'s own local
+       "Cleanup Grids" folder (under TROA-CleanerPlusData) instead. -->
+  <EnableLocalBackupFallback>true</EnableLocalBackupFallback>
+
+  <!-- ===== TROA grid keep policy ===== -->
+  <!-- A grid survives cleanup only if it meets ALL enabled requirements below. -->
+  <RequireBeaconToKeep>true</RequireBeaconToKeep>
+  <MinBlocksToKeep>25</MinBlocksToKeep>
+  <RequireRenamedToKeep>true</RequireRenamedToKeep>
+  <!-- Names treated as "not renamed" (a trailing number like "Large Grid 1234" still matches). -->
+  <DefaultGridNamePatterns>
+    <string>Large Grid</string>
+    <string>Small Grid</string>
+    <string>Static Grid</string>
+    <string>Large Ship</string>
+    <string>Small Ship</string>
+    <string>Platform</string>
+    <string>Unnamed Grid</string>
+  </DefaultGridNamePatterns>
+
+  <!-- ===== Protection / whitelist (always keeps, overrides everything) ===== -->
+  <!-- Put this tag anywhere in a grid's name to protect it. -->
+  <NoCleanTag>[NOCLEAN]</NoCleanTag>
+  <!-- Keep any grid whose name contains one of these (case-insensitive). -->
+  <ProtectedNameSubstrings />
+  <!-- Keep any grid owned by one of these Steam IDs. Example:
+  <ProtectedNameSubstrings>
+    <string>HQ</string>
+    <string>Event</string>
+  </ProtectedNameSubstrings>
+  <ProtectedSteamIds>
+    <unsignedLong>76561190000000000</unsignedLong>
+  </ProtectedSteamIds> -->
+  <ProtectedSteamIds />
+  <!-- Keep any grid owned by one of these faction tags. -->
+  <ProtectedFactionTags />
+  <!-- Keep any grid that contains a block whose type/subtype contains one of these. -->
+  <KeepIfBlockPresent />
+  <!-- Spherical GPS regions that are never cleaned. Example:
+  <ProtectionZones>
+    <ProtectionZone>
+      <Name>Trade Hub</Name>
+      <X>0</X><Y>0</Y><Z>0</Z>
+      <RadiusMeters>5000</RadiusMeters>
+    </ProtectionZone>
+  </ProtectionZones> -->
+  <ProtectionZones />
+
+  <!-- ===== Floating objects module ===== -->
+  <FloatingObjects_Enabled>true</FloatingObjects_Enabled>
+  <!-- Interval | RealTime | CommandOnly -->
+  <FloatingObjects_Mode>Interval</FloatingObjects_Mode>
+  <FloatingObjects_IntervalMinutes>15</FloatingObjects_IntervalMinutes>
+  <FloatingObjects_MaxAgeMinutes>30</FloatingObjects_MaxAgeMinutes>
+  <!-- Keep stacks of at least this size (valuable dropped cargo). 0 = age only. -->
+  <FloatingObjects_KeepStackAtLeast>0</FloatingObjects_KeepStackAtLeast>
+  <!-- Never remove an object within this many meters of an online player. 0 = ignore. -->
+  <FloatingObjects_MinDistanceFromPlayers>0</FloatingObjects_MinDistanceFromPlayers>
+
+  <!-- ===== Grid cleanup module ===== -->
+  <Grids_Enabled>true</Grids_Enabled>
+  <Grids_Mode>Interval</Grids_Mode>
+  <Grids_IntervalMinutes>30</Grids_IntervalMinutes>
+  <!-- Include static (anchored) grids? Off by default. -->
+  <Grids_IncludeStatic>false</Grids_IncludeStatic>
+  <!-- Also remove ownerless grids. -->
+  <Grids_RemoveOwnerless>true</Grids_RemoveOwnerless>
+  <!-- Also remove grids with no functional blocks (dead debris). -->
+  <Grids_RemoveNoFunctional>true</Grids_RemoveNoFunctional>
+  <!-- Spare any eligible grid within this many meters of an online player. 0 = ignore. -->
+  <Grids_MinDistanceFromPlayers>0</Grids_MinDistanceFromPlayers>
+  <!-- Only clean an eligible owned grid if its owner has been offline this many days. 0 = ignore. -->
+  <Grids_OwnerOfflineDays>0</Grids_OwnerOfflineDays>
+
+  <!-- ===== Dead-character module (optional, off by default) ===== -->
+  <Corpses_Enabled>false</Corpses_Enabled>
+  <Corpses_Mode>Interval</Corpses_Mode>
+  <Corpses_IntervalMinutes>20</Corpses_IntervalMinutes>
+  <Corpses_MaxAgeMinutes>30</Corpses_MaxAgeMinutes>
+</CleanerConfig>
