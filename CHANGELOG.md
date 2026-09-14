@@ -1,3 +1,26 @@
+# v1.2.0 - Self-healing performance, player-fair retention, scheduling, analytics
+
+Self-healing performance:
+- Adaptive intervals scale each module's cadence by server sim ratio (healthy = longer, degraded = shorter). Off by default (`Adaptive_*`).
+- Emergency concealment: when sim ratio stays below `Conceal_EmergencyThreshold`, concealment runs aggressively (more per tick, no dwell) then backs off.
+- Concealment keep-alive: grids with an antenna owned by an online player are never concealed (`Conceal_KeepAliveAntenna`).
+- Sim-speed source (`Util/SimSpeed`) reads the engine directly or, if `ProfilerMetricsFile` is set, TROA Profiler+'s metrics file.
+
+Player-fair retention:
+- Owner warnings before cleanup: a grid must be flagged (and its owner warned in chat/Discord) for `Warn_LeadMinutes` before it is removed; a login grants `Warn_LoginGraceMinutes`.
+- Self-service commands: `!cleaner mygrids`, `!cleaner risk <grid>`, `!cleaner keep <grid>` (limited, persisted), `!cleaner request <grid>`.
+- Per-player quotas (`Quota_*`): warn owners over `Quota_MaxGrids`/`Quota_MaxPcu` and optionally flag their smallest grids for cleanup.
+
+Admin control & scheduling:
+- Scheduled cleanup events at a local time-of-day (`ScheduledEvents`) and quiet-hours suppression (`QuietHours`).
+- Undo the last pass (`!cleanerplusadmin undo`) and a player restore-request workflow (`!cleanerplusadmin requests|approve|deny`).
+
+Insight & analytics:
+- Per-pass sim-speed delta in the log + Discord embed; rolling `History/*.csv`; digest now shows clean-reason and top-flagged-owner breakdowns.
+- Prometheus/JSON metrics export (`Metrics_Enabled`) and a periodic Discord server-health dashboard (`Dashboard_Enabled`).
+
+All new features are off by default except owner warnings and history. 54 unit tests pass.
+
 # v1.1.0 - Concealment, Discord Audit, Connected Grids, Zones, Digest, Restore
 
 - **Grid concealment (experimental, off by default):** a reversible layer between "keep active" and "delete". Idle grids far from players are removed from the simulation/update path (not deleted) to reclaim sim speed, and revealed when a player returns. Modernized from the classic TorchAPI/Concealment mechanism (component-update removal, `MyEntities.UnregisterForUpdate`, entity flags, hierarchy recursion, projector handling), with spawn-point safety (never conceals medical/cryo grids), protection/static exclusions, reveal-all on unload, and fail-closed guarding. Config: `Conceal_*`. Commands: `!cleanerplusadmin conceal now|status`, `reveal all`.

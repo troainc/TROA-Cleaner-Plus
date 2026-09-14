@@ -185,4 +185,66 @@
   <Conceal_RevealRadiusMeters>2000</Conceal_RevealRadiusMeters>
   <Conceal_MaxPerTick>2</Conceal_MaxPerTick>
   <Conceal_SkipStatic>true</Conceal_SkipStatic>
+
+  <!-- ===== Self-healing performance (v1.2.0) =====
+       Adaptive intervals scale by sim health (healthy=longer, degraded=shorter). Emergency
+       concealment kicks in when sim ratio stays below the threshold. Keep-alive spares grids with
+       an antenna owned by an online player. Point ProfilerMetricsFile at TROA Profiler+'s
+       prometheus.prom / latest.json to drive sim readings; blank reads the engine directly. -->
+  <Adaptive_Enabled>false</Adaptive_Enabled>
+  <Adaptive_MinIntervalMinutes>5</Adaptive_MinIntervalMinutes>
+  <Adaptive_MaxIntervalMinutes>120</Adaptive_MaxIntervalMinutes>
+  <Adaptive_HealthySimSpeed>0.95</Adaptive_HealthySimSpeed>
+  <Adaptive_DegradedSimSpeed>0.8</Adaptive_DegradedSimSpeed>
+  <ProfilerMetricsFile />
+  <Conceal_EmergencyEnabled>false</Conceal_EmergencyEnabled>
+  <Conceal_EmergencyThreshold>0.6</Conceal_EmergencyThreshold>
+  <Conceal_EmergencyMaxPerTick>8</Conceal_EmergencyMaxPerTick>
+  <Conceal_KeepAliveAntenna>true</Conceal_KeepAliveAntenna>
+
+  <!-- ===== Player-fair retention (v1.2.0) =====
+       Warn a grid's owner before it is cleaned (with a lead + login grace), let players self-protect
+       a limited number of grids, and enforce per-player grid/PCU quotas. -->
+  <Warn_Enabled>true</Warn_Enabled>
+  <Warn_LeadMinutes>10</Warn_LeadMinutes>
+  <Warn_ToOwnerChat>true</Warn_ToOwnerChat>
+  <Warn_ToWebhook>false</Warn_ToWebhook>
+  <Warn_LoginGraceMinutes>15</Warn_LoginGraceMinutes>
+  <!-- Placeholders: {DisplayName} {Grid} {Minutes} {Reason} {NoCleanTag} -->
+  <Warn_MessageTemplate>{DisplayName}: your grid '{Grid}' is flagged for cleanup in ~{Minutes} min ({Reason}). Visit it or use !cleaner keep {Grid} to protect it.</Warn_MessageTemplate>
+  <SelfKeep_Enabled>true</SelfKeep_Enabled>
+  <SelfKeep_MaxPerPlayer>2</SelfKeep_MaxPerPlayer>
+  <SelfKeep_DurationHours>72</SelfKeep_DurationHours>
+  <Quota_Enabled>false</Quota_Enabled>
+  <!-- 0 = unlimited. -->
+  <Quota_MaxGrids>0</Quota_MaxGrids>
+  <Quota_MaxPcu>0</Quota_MaxPcu>
+  <!-- Flag a player's smallest grids for cleanup when over quota (keeps their biggest). -->
+  <Quota_FlagOverLimitGrids>false</Quota_FlagOverLimitGrids>
+
+  <!-- ===== Admin control & scheduling (v1.2.0) =====
+       Scheduled cleanup events at a local time-of-day, quiet-hours suppression, undo of the last
+       pass, and a player restore-request workflow. Example event/quiet-hours:
+  <ScheduledEvents>
+    <ScheduledEvent><Name>Nightly Cleanup</Name><Time>04:00</Time><Days></Days><Module>all</Module><WarnSeconds>60</WarnSeconds></ScheduledEvent>
+  </ScheduledEvents>
+  <QuietHours>
+    <TimeWindow><Start>18:00</Start><End>23:00</End><Days>Sat,Sun</Days></TimeWindow>
+  </QuietHours> -->
+  <Schedule_Enabled>false</Schedule_Enabled>
+  <ScheduledEvents />
+  <QuietHours_Enabled>false</QuietHours_Enabled>
+  <QuietHours />
+  <Undo_Enabled>true</Undo_Enabled>
+  <Undo_WindowMinutes>30</Undo_WindowMinutes>
+  <RestoreRequests_Enabled>true</RestoreRequests_Enabled>
+
+  <!-- ===== Insight & analytics (v1.2.0) =====
+       Rolling History CSV, Prometheus/JSON metrics export for Grafana, and a periodic Discord
+       server-health dashboard embed. -->
+  <History_Enabled>true</History_Enabled>
+  <History_RetainDays>30</History_RetainDays>
+  <Metrics_Enabled>false</Metrics_Enabled>
+  <Dashboard_Enabled>false</Dashboard_Enabled>
+  <Dashboard_IntervalMinutes>30</Dashboard_IntervalMinutes>
 </CleanerConfig>

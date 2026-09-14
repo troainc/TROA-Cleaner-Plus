@@ -9,9 +9,9 @@ it keep the world clean without downtime.
 
 ## Current Release
 
-- Version: `v1.1.0`
-- Package: `TROA-CleanerPlus-v1.1.0.zip`
-- SHA-256: `A26C0B389706D8486DE9851B43FB6400B13C2ABA8F799B4FF6B82884C1C5EE02`
+- Version: `v1.2.0`
+- Package: `TROA-CleanerPlus-v1.2.0.zip`
+- SHA-256: `6CEA197A5F439134C4017452E92E0EE34FA8611F4A382581C845D0A9E6886060`
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
@@ -80,6 +80,21 @@ keep a grid regardless of the policy.
 - **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
   restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
 
+## v1.2.0 features
+
+- **Self-healing performance.** Adaptive intervals scale by server sim ratio; emergency concealment
+  kicks in on sustained lag; antenna keep-alive spares grids of online owners. Sim readings come from
+  the engine or a TROA Profiler+ metrics file (`ProfilerMetricsFile`). `!cleanerplusadmin simspeed`.
+- **Player-fair retention.** Owners are warned before their grid is cleaned (chat/Discord, with a
+  lead + on-login grace); players self-serve with `!cleaner mygrids / risk / keep / request`; and
+  per-player grid/PCU quotas can warn and trim (`Quota_*`).
+- **Admin control & scheduling.** Scheduled cleanup events (`ScheduledEvents`), quiet-hours
+  suppression (`QuietHours`), `!cleanerplusadmin undo`, and a restore-request workflow
+  (`requests` / `approve` / `deny`).
+- **Insight & analytics.** Per-pass sim-speed delta, rolling `History/*.csv`, clean-reason +
+  top-offender breakdown in the digest, Prometheus/JSON metrics export for Grafana
+  (`Metrics_Enabled`), and a periodic Discord server-health dashboard (`Dashboard_Enabled`).
+
 ## Commands
 
 ### Players (moderator/read)
@@ -87,6 +102,10 @@ keep a grid regardless of the policy.
 | Command | Use |
 |---|---|
 | `!cleanerplus help` | Lists commands. |
+| `!cleaner mygrids` | Your grids and their cleanup risk. |
+| `!cleaner risk <grid>` | Why one of your grids is (not) flagged. |
+| `!cleaner keep <grid>` | Protect your grid from cleanup for a while (limited count). |
+| `!cleaner request <grid>` | Ask staff to restore a cleaned grid (local fallback). |
 | `!cleanerplus status` | Shows the master switch, dry-run state, Gridvault+ link state, and each module's mode/interval/removed totals. |
 | `!cleanerplus policy` | Explains the current grid keep policy. |
 | `!cleanerplus scan [module]` | Previews exactly what would be cleaned right now, with the reason each entity failed. **Never deletes.** |
@@ -109,6 +128,11 @@ keep a grid regardless of the policy.
 | `!cleanerplusadmin webhook [test\|reset]` | Discord audit status, test embed, or reset the failure circuit. |
 | `!cleanerplusadmin restore list [steamid]` | Lists local Cleanup Grids backups (no-Gridvault fallback). |
 | `!cleanerplusadmin restore <gridId> [x y z]` | Restores a grid from the local Cleanup Grids folder near you or at GPS. |
+| `!cleanerplusadmin undo` | Restores the grids removed by the last cleanup pass (within the undo window). |
+| `!cleanerplusadmin requests` / `approve <id> [x y z]` / `deny <id>` | Player restore-request workflow. |
+| `!cleanerplusadmin quota` | Recomputes per-player quotas and reports flagged grids. |
+| `!cleanerplusadmin schedule list` | Lists scheduled cleanup events. |
+| `!cleanerplusadmin simspeed` | Shows the current server sim ratio Cleaner+ sees. |
 
 Modules are `floatingobjects`, `grids`, and `corpses`.
 
@@ -207,6 +231,31 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `Conceal_RevealRadiusMeters` | `2000` | Player proximity that conceals/reveals grids. |
 | `Conceal_MaxPerTick` | `2` | Grids concealed per cycle (protects sim speed). |
 | `Conceal_SkipStatic` | `true` | Never conceal static grids. |
+| `Adaptive_Enabled` | `false` | Scale module intervals by server sim ratio. |
+| `Adaptive_Min/MaxIntervalMinutes` | `5`/`120` | Bounds for adaptive intervals. |
+| `Adaptive_Healthy/DegradedSimSpeed` | `0.95`/`0.80` | Sim thresholds for scaling. |
+| `ProfilerMetricsFile` | empty | TROA Profiler+ metrics file to read sim speed from (blank = engine). |
+| `Conceal_EmergencyEnabled` | `false` | Conceal aggressively when sim ratio stays low. |
+| `Conceal_EmergencyThreshold` | `0.60` | Sim ratio that triggers emergency concealment. |
+| `Conceal_EmergencyMaxPerTick` | `8` | Grids concealed per tick in emergency mode. |
+| `Conceal_KeepAliveAntenna` | `true` | Never conceal a grid with an antenna owned by an online player. |
+| `Warn_Enabled` | `true` | Warn a grid's owner before cleanup and gate removal behind the lead. |
+| `Warn_LeadMinutes` | `10` | Warning lead before a flagged grid is actually removed. |
+| `Warn_ToOwnerChat` / `Warn_ToWebhook` | `true`/`false` | Warning destinations. |
+| `Warn_LoginGraceMinutes` | `15` | Grace after a player logs in before their grids can be cleaned. |
+| `Warn_MessageTemplate` | (see cfg) | Owner warning text. Placeholders `{DisplayName}` `{Grid}` `{Minutes}` `{Reason}` `{NoCleanTag}`. |
+| `SelfKeep_Enabled` | `true` | Allow `!cleaner keep`. |
+| `SelfKeep_MaxPerPlayer` / `SelfKeep_DurationHours` | `2`/`72` | Self-keep limits. |
+| `Quota_Enabled` | `false` | Enable per-player grid/PCU quotas. |
+| `Quota_MaxGrids` / `Quota_MaxPcu` | `0`/`0` | Caps (0 = unlimited). |
+| `Quota_FlagOverLimitGrids` | `false` | Flag a player's smallest grids when over quota. |
+| `Schedule_Enabled` / `ScheduledEvents` | `false` / empty | Scheduled cleanup events at a local time. |
+| `QuietHours_Enabled` / `QuietHours` | `false` / empty | Suppress automatic passes in these windows. |
+| `Undo_Enabled` / `Undo_WindowMinutes` | `true`/`30` | Allow `!cleanerplusadmin undo` within the window. |
+| `RestoreRequests_Enabled` | `true` | Allow `!cleaner request` / admin approve-deny. |
+| `History_Enabled` / `History_RetainDays` | `true`/`30` | Rolling pass history CSV. |
+| `Metrics_Enabled` | `false` | Write Prometheus/JSON metrics for Grafana. |
+| `Dashboard_Enabled` / `Dashboard_IntervalMinutes` | `false`/`30` | Periodic Discord server-health dashboard. |
 
 ## "Why was my grid cleaned?"
 
