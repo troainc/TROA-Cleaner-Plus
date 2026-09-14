@@ -1,3 +1,13 @@
+# v1.1.0 - Concealment, Discord Audit, Connected Grids, Zones, Digest, Restore
+
+- **Grid concealment (experimental, off by default):** a reversible layer between "keep active" and "delete". Idle grids far from players are removed from the simulation/update path (not deleted) to reclaim sim speed, and revealed when a player returns. Modernized from the classic TorchAPI/Concealment mechanism (component-update removal, `MyEntities.UnregisterForUpdate`, entity flags, hierarchy recursion, projector handling), with spawn-point safety (never conceals medical/cryo grids), protection/static exclusions, reveal-all on unload, and fail-closed guarding. Config: `Conceal_*`. Commands: `!cleanerplusadmin conceal now|status`, `reveal all`.
+- **Discord audit webhook with pretty embeds:** consolidated per-pass embed (removed / backed up / skipped / dry-run), a scheduled digest embed, and a concealment-effectiveness embed with a coverage progress bar. Quiet-failure circuit (3 fails → 10-min pause), ASCII-safe payloads, URL never logged. Config: `EnableAuditWebhook`, `AuditWebhookUrl`, `WebhookName`, `SendStartupWebhookTest`, `WebhookOnPass/Digest/Conceal`. Command: `!cleanerplusadmin webhook [test|reset]`.
+- **Connected-grid awareness:** mechanically connected subgrids are treated as one unit — the group is kept if any member passes the keep policy, and every member is backed up before any is removed. Config: `Grids_TreatConnectedAsGroup` (default on).
+- **Per-faction / per-zone policy overrides:** different block minimums, beacon requirement, or enable state inside a faction or GPS zone (most-specific wins). Config: `PolicyOverrides`.
+- **Owner-offline seeding:** historical last-login data is imported once at first load so `Grids_OwnerOfflineDays` is accurate immediately after install, not only from first run.
+- **Scheduled digest:** periodic "world is clean / N grids flagged" report to the log, in-game chat, and Discord. Config: `Digest_*`. Command: `!cleanerplusadmin digest now`.
+- **Local restore helper:** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]` restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
+
 # v1.0.0-alpha.2 - Fully Configurable Messaging
 
 - Made all player-facing text configurable in `TROA-CleanerPlus.cfg`: `WarningMessageTemplate`, `SummaryMessageTemplate`, `KeepHintMessage`, `RecoveryHintMessage`, and `PolicyMessageOverride`, plus `ShowKeepHintOnScan` and `ScanMaxLines`.

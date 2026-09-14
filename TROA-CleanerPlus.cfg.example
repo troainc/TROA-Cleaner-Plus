@@ -133,4 +133,56 @@
   <Corpses_Mode>Interval</Corpses_Mode>
   <Corpses_IntervalMinutes>20</Corpses_IntervalMinutes>
   <Corpses_MaxAgeMinutes>30</Corpses_MaxAgeMinutes>
+
+  <!-- ===== Connected-grid awareness ===== -->
+  <!-- Treat mechanically connected subgrids (rotor/piston) as one unit: kept if any member passes
+       the policy; all members are backed up before any is removed. -->
+  <Grids_TreatConnectedAsGroup>true</Grids_TreatConnectedAsGroup>
+
+  <!-- ===== Per-faction / per-zone policy overrides =====
+       Each override changes only the fields it sets (MinBlocksToKeep -1 = inherit; flags Inherit|On|Off).
+       Match is FactionTag or ZoneName; a zone match beats a faction match. Example:
+  <PolicyOverrides>
+    <PolicyOverride>
+      <Match>ZoneName</Match>
+      <Value>Trade Hub</Value>
+      <MinBlocksToKeep>100</MinBlocksToKeep>
+      <IntervalMinutes>-1</IntervalMinutes>
+      <RequireBeaconToKeep>Off</RequireBeaconToKeep>
+      <Enabled>Inherit</Enabled>
+    </PolicyOverride>
+  </PolicyOverrides> -->
+  <PolicyOverrides />
+
+  <!-- ===== Discord audit webhook (pretty embeds) ===== -->
+  <EnableAuditWebhook>false</EnableAuditWebhook>
+  <!-- Full Discord webhook URL. Keep private; it is never written to logs. -->
+  <AuditWebhookUrl />
+  <WebhookName>Cleaner+</WebhookName>
+  <SendStartupWebhookTest>true</SendStartupWebhookTest>
+  <!-- Which events post an embed. -->
+  <WebhookOnPass>true</WebhookOnPass>
+  <WebhookOnDigest>true</WebhookOnDigest>
+  <!-- Concealment effectiveness report (coverage %, concealed/revealed). -->
+  <WebhookOnConceal>false</WebhookOnConceal>
+
+  <!-- ===== Scheduled digest ("world is clean / N grids flagged") ===== -->
+  <Digest_Enabled>false</Digest_Enabled>
+  <Digest_IntervalMinutes>60</Digest_IntervalMinutes>
+  <Digest_ToAdminsInGame>true</Digest_ToAdminsInGame>
+  <Digest_ToWebhook>true</Digest_ToWebhook>
+
+  <!-- ===== Grid concealment (EXPERIMENTAL, off by default) =====
+       Reversibly pauses idle grids (removes them from simulation, not deletion) to reclaim sim
+       speed; reveals them when a player approaches; reveals everything on world unload. Never
+       conceals static, protected, or spawn-capable (medical/cryo) grids. -->
+  <Conceal_Enabled>false</Conceal_Enabled>
+  <Conceal_Mode>Interval</Conceal_Mode>
+  <Conceal_IntervalMinutes>5</Conceal_IntervalMinutes>
+  <!-- A grid must be idle (no player within reveal radius) this long before it is concealed. -->
+  <Conceal_InactiveMinutes>30</Conceal_InactiveMinutes>
+  <!-- A player within this many meters conceals/reveals grids. -->
+  <Conceal_RevealRadiusMeters>2000</Conceal_RevealRadiusMeters>
+  <Conceal_MaxPerTick>2</Conceal_MaxPerTick>
+  <Conceal_SkipStatic>true</Conceal_SkipStatic>
 </CleanerConfig>

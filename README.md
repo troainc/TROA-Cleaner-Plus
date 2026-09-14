@@ -9,9 +9,9 @@ it keep the world clean without downtime.
 
 ## Current Release
 
-- Version: `v1.0.0-alpha.2`
-- Package: `TROA-CleanerPlus-v1.0.0-alpha.2.zip`
-- SHA-256: `37D4E46615A5EB339A21F7AC6EB8386F3992C508456DAADE97BA3F7BE1665853`
+- Version: `v1.1.0`
+- Package: `TROA-CleanerPlus-v1.1.0.zip`
+- SHA-256: `A26C0B389706D8486DE9851B43FB6400B13C2ABA8F799B4FF6B82884C1C5EE02`
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
@@ -55,8 +55,30 @@ keep a grid regardless of the policy.
 | Module | Key | Default | What it removes |
 |---|---|---|---|
 | Floating objects | `floatingobjects` | on | Dropped ore/component stacks older than `FloatingObjects_MaxAgeMinutes`, optionally sparing large stacks and objects near players. |
-| Grids | `grids` | on | Grids that fail the keep policy, plus (optionally) ownerless grids and grids with no functional blocks. Static grids are excluded unless enabled. |
+| Grids | `grids` | on | Grids that fail the keep policy, plus (optionally) ownerless grids and grids with no functional blocks. Static grids are excluded unless enabled. Connected subgrids are treated as one unit. |
 | Dead characters | `corpses` | off | Dead character bodies older than `Corpses_MaxAgeMinutes`. |
+
+## v1.1.0 features
+
+- **Grid concealment (experimental, off by default).** A reversible layer between "keep active" and
+  "delete": idle grids far from players are removed from the simulation/update path (not deleted) to
+  reclaim sim speed, and revealed when a player returns. Never conceals static, protected, or
+  spawn-capable (medical/cryo) grids, and reveals everything on world unload. Enable with
+  `Conceal_Enabled`; drive it with `!cleanerplusadmin conceal now|status` and `reveal all`.
+- **Discord audit with pretty embeds.** Consolidated per-pass embed (removed / backed up / skipped),
+  a scheduled digest embed, and a **concealment-effectiveness** embed with a coverage progress bar.
+  Quiet-failure circuit (3 fails → 10-min pause); the webhook URL is never logged. Configure
+  `EnableAuditWebhook` + `AuditWebhookUrl`; check with `!cleanerplusadmin webhook [test|reset]`.
+- **Connected-grid awareness.** Mechanically connected subgrids are evaluated and backed up as one
+  unit (`Grids_TreatConnectedAsGroup`, default on).
+- **Per-faction / per-zone policies.** Different block minimums, beacon requirement, or enable state
+  inside a faction or GPS zone (`PolicyOverrides`; most-specific wins).
+- **Owner-offline seeding.** Historical last-login data is imported once at first load so
+  `Grids_OwnerOfflineDays` is accurate immediately after install.
+- **Scheduled digest.** Periodic "world is clean / N grids flagged" report to log, chat, and Discord
+  (`Digest_*`; `!cleanerplusadmin digest now`).
+- **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
+  restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
 
 ## Commands
 
@@ -81,6 +103,12 @@ keep a grid regardless of the policy.
 | `!cleanerplusadmin dryrun <on\|off>` | Global dry-run switch. |
 | `!cleanerplusadmin master <on\|off>` | Enables or disables all cleanup. |
 | `!cleanerplusadmin reload` | Re-reads the config file with no restart. |
+| `!cleanerplusadmin conceal now\|status` | Runs an experimental concealment pass / shows coverage. |
+| `!cleanerplusadmin reveal all` | Reveals every concealed grid. |
+| `!cleanerplusadmin digest now` | Sends the cleanup digest immediately. |
+| `!cleanerplusadmin webhook [test\|reset]` | Discord audit status, test embed, or reset the failure circuit. |
+| `!cleanerplusadmin restore list [steamid]` | Lists local Cleanup Grids backups (no-Gridvault fallback). |
+| `!cleanerplusadmin restore <gridId> [x y z]` | Restores a grid from the local Cleanup Grids folder near you or at GPS. |
 
 Modules are `floatingobjects`, `grids`, and `corpses`.
 
@@ -162,6 +190,23 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `Corpses_Mode` | `Interval` | `Interval`, `RealTime`, or `CommandOnly`. |
 | `Corpses_IntervalMinutes` | `20` | Interval-mode period. |
 | `Corpses_MaxAgeMinutes` | `30` | Minimum age before a dead body is removed. |
+| `Grids_TreatConnectedAsGroup` | `true` | Treat connected subgrids as one unit for policy + backup. |
+| `PolicyOverrides` | empty | Per-faction / per-zone overrides of block min, beacon, interval, enable. |
+| `EnableAuditWebhook` | `false` | Enable Discord audit embeds. |
+| `AuditWebhookUrl` | empty | Discord webhook URL (kept private; never logged). |
+| `WebhookName` | `Cleaner+` | Discord sender name. |
+| `SendStartupWebhookTest` | `true` | Post a test embed when the webhook is first configured. |
+| `WebhookOnPass` / `WebhookOnDigest` / `WebhookOnConceal` | `true`/`true`/`false` | Which events post embeds. |
+| `Digest_Enabled` | `false` | Enable the periodic digest report. |
+| `Digest_IntervalMinutes` | `60` | Digest period. |
+| `Digest_ToAdminsInGame` / `Digest_ToWebhook` | `true` | Digest destinations (chat / Discord). |
+| `Conceal_Enabled` | `false` | Enable experimental grid concealment. |
+| `Conceal_Mode` | `Interval` | Concealment run mode. |
+| `Conceal_IntervalMinutes` | `5` | How often the concealment cycle runs. |
+| `Conceal_InactiveMinutes` | `30` | Idle time before a grid is concealed. |
+| `Conceal_RevealRadiusMeters` | `2000` | Player proximity that conceals/reveals grids. |
+| `Conceal_MaxPerTick` | `2` | Grids concealed per cycle (protects sim speed). |
+| `Conceal_SkipStatic` | `true` | Never conceal static grids. |
 
 ## "Why was my grid cleaned?"
 
