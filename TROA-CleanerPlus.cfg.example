@@ -268,4 +268,56 @@
   <Metrics_Enabled>false</Metrics_Enabled>
   <Dashboard_Enabled>false</Dashboard_Enabled>
   <Dashboard_IntervalMinutes>30</Dashboard_IntervalMinutes>
+
+  <!-- ===================== PERSISTENT AGE + OWNER HELP + CLAIM (v1.4.0) ===================== -->
+  <!-- Persist grid first-seen across restarts so grace/idle/offline stay accurate. -->
+  <PersistGridAge>true</PersistGridAge>
+  <!-- Send a temporary GPS marker to a flagged grid's owner (follows Warn_Enabled). -->
+  <Warn_SendGps>true</Warn_SendGps>
+  <!-- Let players claim a nearby ownerless grid with !cleaner claim. -->
+  <Claim_Enabled>true</Claim_Enabled>
+  <Claim_MaxDistanceMeters>200</Claim_MaxDistanceMeters>
+
+  <!-- ===================== RESPAWN-SHIP MODULE (v1.4.0, off by default) ===================== -->
+  <!-- Removes unclaimed (ownerless) default respawn ships/pods older than the age. -->
+  <RespawnShips_Enabled>false</RespawnShips_Enabled>
+  <RespawnShips_Mode>Interval</RespawnShips_Mode>
+  <RespawnShips_IntervalMinutes>15</RespawnShips_IntervalMinutes>
+  <RespawnShips_MaxAgeMinutes>30</RespawnShips_MaxAgeMinutes>
+  <RespawnShips_MinDistanceFromPlayers>0</RespawnShips_MinDistanceFromPlayers>
+  <!-- Grid names (substring match) treated as respawn ships. Edit or delete. -->
+  <RespawnShip_NamePatterns>
+    <string>Respawn</string>
+    <string>RespawnShip</string>
+    <string>Atmospheric Lander</string>
+    <string>Escape Pod</string>
+    <string>Rescue Ship</string>
+  </RespawnShip_NamePatterns>
+
+  <!-- ===================== NPC-GRID MODULE (v1.4.0, off by default) ===================== -->
+  <!-- Removes stale NPC / pirate / cargo / encounter grids far from players. -->
+  <NpcGrids_Enabled>false</NpcGrids_Enabled>
+  <NpcGrids_Mode>Interval</NpcGrids_Mode>
+  <NpcGrids_IntervalMinutes>30</NpcGrids_IntervalMinutes>
+  <Npc_MaxAgeMinutes>60</Npc_MaxAgeMinutes>
+  <Npc_MinDistanceFromPlayers>5000</Npc_MinDistanceFromPlayers>
+  <!-- Keep NPC grids that contain any of these blocks (trade stations, safe zones). Edit or delete. -->
+  <Npc_KeepIfBlockPresent>
+    <string>Store</string>
+    <string>SafeZone</string>
+  </Npc_KeepIfBlockPresent>
+
+  <!-- ===================== TROA-HANGAR AUTO-STOW (v1.4.0, off by default) ===================== -->
+  <!-- Move an owned flagged grid into its owner's TROA-Hanger hangar instead of deleting it. -->
+  <Stow_Enabled>false</Stow_Enabled>
+  <Stow_OnlyOwnerOffline>true</Stow_OnlyOwnerOffline>
+
+  <!-- ===================== GRADUATED ABANDONMENT LIFECYCLE (v1.4.0, off by default) =====================
+       For OWNED grids only: warn (+GPS) -> depower reactors/thrusters -> dispose (stow or delete), on
+       timers. Ownerless grids and other modules dispose immediately as usual. Supersedes the immediate
+       owned-grid removal path when enabled. -->
+  <Lifecycle_Enabled>false</Lifecycle_Enabled>
+  <Lifecycle_Depower>true</Lifecycle_Depower>
+  <Lifecycle_DepowerMinutes>60</Lifecycle_DepowerMinutes>
+  <Lifecycle_DisposeMinutes>1440</Lifecycle_DisposeMinutes>
 </CleanerConfig>

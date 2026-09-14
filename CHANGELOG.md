@@ -1,3 +1,23 @@
+# v1.4.0 - Lifecycle, Hangar stow, Respawn/NPC cleanup, persistent age, claim
+
+- **Graduated abandonment lifecycle** (`Lifecycle_Enabled`, owned grids): instead of instant deletion,
+  a flagged grid is warned (+GPS) -> depowered (reactors/thrusters/tools off) -> disposed (stow or
+  delete) on `Lifecycle_DepowerMinutes` / `Lifecycle_DisposeMinutes`; state persists across restarts.
+  `!cleanerplusadmin lifecycle status`.
+- **TROA-Hangar auto-stow** (`Stow_Enabled`): move an owned flagged grid into its owner's hangar via a
+  reflection soft-bridge (like Gridvault+) instead of deleting; falls back to backup+delete when
+  TROA-Hanger is absent. `Stow_OnlyOwnerOffline`; `!cleanerplusadmin stow status`.
+- **Respawn-ship module** (`respawnships`, off by default): removes unclaimed default respawn ships/pods
+  by name pattern + age.
+- **NPC-grid module** (`npcgrids`, off by default): removes stale NPC/pirate/cargo/encounter grids by
+  age + distance, sparing grids with a keep block (Store/SafeZone).
+- **Persistent grid age** (`PersistGridAge`): first-seen times persist to `GridAges.xml` so grace/idle/
+  offline stay accurate across restarts.
+- **Owner GPS markers** (`Warn_SendGps`): a flagged grid drops a temporary GPS to its owner.
+- **Claim window** (`Claim_Enabled`): `!cleaner claim <grid>` lets a player take a nearby ownerless grid.
+- **Bugfix**: content-defaulted config lists (WarningLeadSeconds, DefaultGridNamePatterns, respawn/NPC
+  lists) no longer double on load (XmlSerializer append behavior); now filled only when empty.
+
 # v1.3.0 - Backlog: keep-alive action, PCU rules, safe-zone protect, localization, CI
 
 - **PB / Remote-Control keep-alive action** — a `Cleaner+ Keep Alive` terminal action on Programmable Blocks and Remote Controls holds a grid hot (exempt from concealment) for `Conceal_KeepAliveMinutes` (`Conceal_KeepAliveAction`).

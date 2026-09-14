@@ -9,9 +9,9 @@ it keep the world clean without downtime.
 
 ## Current Release
 
-- Version: `v1.3.0`
-- Package: `TROA-CleanerPlus-v1.3.0.zip`
-- SHA-256: `011A18F7AF9CF2CEF9F22A17D1E831BA9121C274F852124A6CA3ACD14E7DFFFC`
+- Version: `v1.4.0`
+- Package: `TROA-CleanerPlus-v1.4.0.zip`
+- SHA-256: `4ABBA05A7B049F382F4E69E18E460046FC05B86ABE38BEB3F7AA52FBAB96BAF4`
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
@@ -80,6 +80,18 @@ keep a grid regardless of the policy.
 - **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
   restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
 
+## v1.4.0 features
+
+- **Graduated abandonment lifecycle** (`Lifecycle_Enabled`) — owned grids go warn(+GPS) -> depower ->
+  dispose on timers instead of instant deletion; state persists. `!cleanerplusadmin lifecycle status`.
+- **TROA-Hangar auto-stow** (`Stow_Enabled`) — move an owned grid into its owner's hangar instead of
+  deleting (falls back to backup+delete when TROA-Hanger is absent). `!cleanerplusadmin stow status`.
+- **Respawn-ship module** (`respawnships`) — remove unclaimed default respawn ships/pods.
+- **NPC-grid module** (`npcgrids`) — remove stale NPC/pirate/cargo/encounter grids, sparing trade
+  stations (Store/SafeZone).
+- **Persistent grid age** (`PersistGridAge`) — grace/idle/offline stay accurate across restarts.
+- **Owner GPS markers** (`Warn_SendGps`) + **claim** (`!cleaner claim <grid>` for nearby ownerless grids).
+
 ## v1.3.0 features
 
 - **PB / Remote-Control keep-alive** — a `Cleaner+ Keep Alive` terminal action on Programmable Blocks
@@ -119,6 +131,7 @@ keep a grid regardless of the policy.
 | `!cleaner mygrids` | Your grids and their cleanup risk. |
 | `!cleaner risk <grid>` | Why one of your grids is (not) flagged. |
 | `!cleaner keep <grid>` | Protect your grid from cleanup for a while (limited count). |
+| `!cleaner claim <grid>` | Claim a nearby ownerless grid so it isn't cleaned. |
 | `!cleaner request <grid>` | Ask staff to restore a cleaned grid (local fallback). |
 | `!cleanerplus status` | Shows the master switch, dry-run state, Gridvault+ link state, and each module's mode/interval/removed totals. |
 | `!cleanerplus policy` | Explains the current grid keep policy. |
@@ -147,6 +160,7 @@ keep a grid regardless of the policy.
 | `!cleanerplusadmin quota` | Recomputes per-player quotas and reports flagged grids. |
 | `!cleanerplusadmin schedule list` | Lists scheduled cleanup events. |
 | `!cleanerplusadmin simspeed` | Shows the current server sim ratio Cleaner+ sees. |
+| `!cleanerplusadmin lifecycle status` / `stow status` | Lifecycle stage counts / TROA-Hanger stow availability. |
 
 Modules are `floatingobjects`, `grids`, and `corpses`.
 
@@ -275,6 +289,14 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `LocaleFile` | empty | Path to a locale pack that overrides all message templates. |
 | `Conceal_RevealOnSpawn` | `false` | Conceal medbay/cryo grids and reveal them on player spawn/login. |
 | `Conceal_KeepAliveAction` / `Conceal_KeepAliveMinutes` | `true`/`30` | PB/RC keep-alive terminal action + how long it holds. |
+| `PersistGridAge` | `true` | Persist grid first-seen across restarts. |
+| `Warn_SendGps` | `true` | Send a temporary GPS marker to a flagged grid's owner. |
+| `Claim_Enabled` / `Claim_MaxDistanceMeters` | `true`/`200` | Allow `!cleaner claim` for nearby ownerless grids. |
+| `RespawnShips_Enabled` (+ `_Mode/_IntervalMinutes/_MaxAgeMinutes`, `RespawnShip_NamePatterns`) | `false` | Respawn-ship module. |
+| `NpcGrids_Enabled` (+ `_Mode/_IntervalMinutes`, `Npc_MaxAgeMinutes`, `Npc_MinDistanceFromPlayers`, `Npc_KeepIfBlockPresent`) | `false` | NPC-grid module. |
+| `Stow_Enabled` / `Stow_OnlyOwnerOffline` | `false`/`true` | Auto-stow owned grids into TROA-Hanger instead of deleting. |
+| `Lifecycle_Enabled` / `Lifecycle_Depower` | `false`/`true` | Graduated abandonment for owned grids. |
+| `Lifecycle_DepowerMinutes` / `Lifecycle_DisposeMinutes` | `60`/`1440` | Lifecycle stage timers. |
 
 ## "Why was my grid cleaned?"
 
