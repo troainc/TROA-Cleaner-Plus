@@ -58,28 +58,6 @@ keep a grid regardless of the policy.
 | Grids | `grids` | on | Grids that fail the keep policy, plus (optionally) ownerless grids and grids with no functional blocks. Static grids are excluded unless enabled. Connected subgrids are treated as one unit. |
 | Dead characters | `corpses` | off | Dead character bodies older than `Corpses_MaxAgeMinutes`. |
 
-## v1.1.0 features
-
-- **Grid concealment (experimental, off by default).** A reversible layer between "keep active" and
-  "delete": idle grids far from players are removed from the simulation/update path (not deleted) to
-  reclaim sim speed, and revealed when a player returns. Never conceals static, protected, or
-  spawn-capable (medical/cryo) grids, and reveals everything on world unload. Enable with
-  `Conceal_Enabled`; drive it with `!cleanerplusadmin conceal now|status` and `reveal all`.
-- **Discord audit with pretty embeds.** Consolidated per-pass embed (removed / backed up / skipped),
-  a scheduled digest embed, and a **concealment-effectiveness** embed with a coverage progress bar.
-  Quiet-failure circuit (3 fails → 10-min pause); the webhook URL is never logged. Configure
-  `EnableAuditWebhook` + `AuditWebhookUrl`; check with `!cleanerplusadmin webhook [test|reset]`.
-- **Connected-grid awareness.** Mechanically connected subgrids are evaluated and backed up as one
-  unit (`Grids_TreatConnectedAsGroup`, default on).
-- **Per-faction / per-zone policies.** Different block minimums, beacon requirement, or enable state
-  inside a faction or GPS zone (`PolicyOverrides`; most-specific wins).
-- **Owner-offline seeding.** Historical last-login data is imported once at first load so
-  `Grids_OwnerOfflineDays` is accurate immediately after install.
-- **Scheduled digest.** Periodic "world is clean / N grids flagged" report to log, chat, and Discord
-  (`Digest_*`; `!cleanerplusadmin digest now`).
-- **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
-  restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
-
 ## v1.4.0 features
 
 - **Graduated abandonment lifecycle** (`Lifecycle_Enabled`) — owned grids go warn(+GPS) -> depower ->
@@ -121,6 +99,28 @@ keep a grid regardless of the policy.
   top-offender breakdown in the digest, Prometheus/JSON metrics export for Grafana
   (`Metrics_Enabled`), and a periodic Discord server-health dashboard (`Dashboard_Enabled`).
 
+## v1.1.0 features
+
+- **Grid concealment (experimental, off by default).** A reversible layer between "keep active" and
+  "delete": idle grids far from players are removed from the simulation/update path (not deleted) to
+  reclaim sim speed, and revealed when a player returns. Never conceals static, protected, or
+  spawn-capable (medical/cryo) grids, and reveals everything on world unload. Enable with
+  `Conceal_Enabled`; drive it with `!cleanerplusadmin conceal now|status` and `reveal all`.
+- **Discord audit with pretty embeds.** Consolidated per-pass embed (removed / backed up / skipped),
+  a scheduled digest embed, and a **concealment-effectiveness** embed with a coverage progress bar.
+  Quiet-failure circuit (3 fails → 10-min pause); the webhook URL is never logged. Configure
+  `EnableAuditWebhook` + `AuditWebhookUrl`; check with `!cleanerplusadmin webhook [test|reset]`.
+- **Connected-grid awareness.** Mechanically connected subgrids are evaluated and backed up as one
+  unit (`Grids_TreatConnectedAsGroup`, default on).
+- **Per-faction / per-zone policies.** Different block minimums, beacon requirement, or enable state
+  inside a faction or GPS zone (`PolicyOverrides`; most-specific wins).
+- **Owner-offline seeding.** Historical last-login data is imported once at first load so
+  `Grids_OwnerOfflineDays` is accurate immediately after install.
+- **Scheduled digest.** Periodic "world is clean / N grids flagged" report to log, chat, and Discord
+  (`Digest_*`; `!cleanerplusadmin digest now`).
+- **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
+  restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
+  
 ## Commands
 
 ### Players (moderator/read)
