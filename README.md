@@ -9,9 +9,9 @@ it keep the world clean without downtime.
 
 ## Current Release
 
-- Version: `v1.2.0`
-- Package: `TROA-CleanerPlus-v1.2.0.zip`
-- SHA-256: `6CEA197A5F439134C4017452E92E0EE34FA8611F4A382581C845D0A9E6886060`
+- Version: `v1.3.0`
+- Package: `TROA-CleanerPlus-v1.3.0.zip`
+- SHA-256: `011A18F7AF9CF2CEF9F22A17D1E831BA9121C274F852124A6CA3ACD14E7DFFFC`
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
@@ -79,6 +79,20 @@ keep a grid regardless of the policy.
   (`Digest_*`; `!cleanerplusadmin digest now`).
 - **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
   restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
+
+## v1.3.0 features
+
+- **PB / Remote-Control keep-alive** — a `Cleaner+ Keep Alive` terminal action on Programmable Blocks
+  and Remote Controls holds a grid hot (exempt from concealment) for `Conceal_KeepAliveMinutes`.
+- **PCU keep rule** — `RequirePcuToKeep` + `MinPcuToKeep` add PCU as a first-class keep requirement.
+- **Safe-zone auto-protect** — `Protect_SafeZoneGrids` protects any grid with a Safe Zone block.
+- **Localization packs** — `LocaleFile` points at a `key=value` file to translate all player messages
+  (`docs/locales/en.lang` + a German sample ship in the repo).
+- **Concealment reveal-on-spawn** — `Conceal_RevealOnSpawn` lets medbay/cryo grids be concealed and
+  reveals them when a player logs in/spawns.
+- **CI** — `.github/workflows/build-and-release.yml` builds and publishes releases on a `v*` tag.
+- **Player-ready config example** — every list in `TROA-CleanerPlus.cfg.example` now shows real,
+  editable sample entries instead of empty tags.
 
 ## v1.2.0 features
 
@@ -256,6 +270,11 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `History_Enabled` / `History_RetainDays` | `true`/`30` | Rolling pass history CSV. |
 | `Metrics_Enabled` | `false` | Write Prometheus/JSON metrics for Grafana. |
 | `Dashboard_Enabled` / `Dashboard_IntervalMinutes` | `false`/`30` | Periodic Discord server-health dashboard. |
+| `RequirePcuToKeep` / `MinPcuToKeep` | `false`/`0` | PCU keep rule: a grid under this PCU fails the policy. |
+| `Protect_SafeZoneGrids` | `true` | Auto-protect any grid containing a Safe Zone block. |
+| `LocaleFile` | empty | Path to a locale pack that overrides all message templates. |
+| `Conceal_RevealOnSpawn` | `false` | Conceal medbay/cryo grids and reveal them on player spawn/login. |
+| `Conceal_KeepAliveAction` / `Conceal_KeepAliveMinutes` | `true`/`30` | PB/RC keep-alive terminal action + how long it holds. |
 
 ## "Why was my grid cleaned?"
 

@@ -1,0 +1,8 @@
+# TROA Cleaner+ German locale pack (community sample — refine as needed).
+# Point LocaleFile at this file in TROA-CleanerPlus.cfg to use it. Keep {placeholders} unchanged.
+
+WarningMessageTemplate={DisplayName}: {Module}-Aufraeumung in {Seconds}s.
+SummaryMessageTemplate={DisplayName}: {Count} {Module} bereinigt.
+KeepHintMessage=So behaeltst du ein Grid: setze eine Bake, baue es ueber {MinBlocks} Bloecke aus, benenne es um, oder fuege {NoCleanTag} zum Namen hinzu.
+RecoveryHintMessage=Entfernte Grids sind wiederherstellbar: nutze !gridvault find <name> oder frage das Team mit !cleaner request.
+Warn_MessageTemplate={DisplayName}: dein Grid '{Grid}' wird in ~{Minutes} Min bereinigt ({Reason}). Besuche es oder nutze !cleaner keep {Grid} zum Schutz.

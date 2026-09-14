@@ -1,3 +1,13 @@
+# v1.3.0 - Backlog: keep-alive action, PCU rules, safe-zone protect, localization, CI
+
+- **PB / Remote-Control keep-alive action** — a `Cleaner+ Keep Alive` terminal action on Programmable Blocks and Remote Controls holds a grid hot (exempt from concealment) for `Conceal_KeepAliveMinutes` (`Conceal_KeepAliveAction`).
+- **PCU keep rule** — `RequirePcuToKeep` + `MinPcuToKeep`: a grid under the PCU minimum fails the keep policy (shown as "under N PCU" in `!cleanerplus scan`). Also honored per-zone/faction.
+- **Safe-zone / faction-HQ auto-protect** — `Protect_SafeZoneGrids`: any grid containing a Safe Zone block is protected automatically, no manual GPS zone needed.
+- **Localization packs** — set `LocaleFile` to a `key=value` locale file to override all player-facing messages; ships `docs/locales/en.lang` + a German sample.
+- **Concealment reveal-on-spawn** — `Conceal_RevealOnSpawn`: allows concealing medbay/cryo grids and reveals grids near players when someone logs in/spawns.
+- **CI workflow** — `.github/workflows/build-and-release.yml` builds on push and, on a `v*` tag, publishes the plugin zip to the public release repo (needs `TORCH_BINARIES_TOKEN` + `PUBLIC_REPO_TOKEN`).
+- **Player-ready config example** — `TROA-CleanerPlus.cfg.example` rewritten with real, populated sample entries (protection lists, zones, policy overrides, scheduled events, quiet hours) using open/close tags — no more empty self-closing tags to guess at.
+
 # v1.2.0 - Self-healing performance, player-fair retention, scheduling, analytics
 
 Self-healing performance:

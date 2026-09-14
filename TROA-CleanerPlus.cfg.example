@@ -1,15 +1,21 @@
 <?xml version="1.0"?>
 <!--
-  TROA Cleaner+ example configuration.
+  TROA Cleaner+ example configuration (v1.3.0).
 
-  This file documents every setting. The live file is created next to the plugin as
-  "TROA-CleanerPlus.cfg" on first start. Edit that file and either save it (the plugin reloads
-  automatically) or run "!cleanerplusadmin reload" in game. No server restart is ever required.
+  HOW TO USE THIS FILE
+  - The live file is created next to the plugin as "TROA-CleanerPlus.cfg" on first start.
+  - This example shows every setting WITH real sample entries so nothing is left to guess.
+  - The list sections below (ProtectedSteamIds, ProtectionZones, ScheduledEvents, QuietHours, ...)
+    contain SAMPLE entries. Edit them to your server, or delete the entries you do not want.
+    To make a list empty, remove the inner entries (e.g. <ProtectionZones></ProtectionZones>).
+  - Edit the live .cfg and save it (auto-reloads), or run "!cleanerplusadmin reload". No restart.
 
-  SAFETY: GlobalDryRun ships ON. Nothing is deleted until you set it to false. Use
+  SAFETY: GlobalDryRun ships ON. Nothing is deleted until you set it to false. Run
   "!cleanerplus scan" to preview exactly what would be removed first.
 -->
 <CleanerConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <!-- ===================== MASTER ===================== -->
   <!-- Master switch for the whole plugin. -->
   <Enabled>true</Enabled>
   <!-- Name shown in chat broadcasts and logs. -->
@@ -21,48 +27,45 @@
   <!-- Removals per simulation tick. Keep low so a big sweep never stalls the server. -->
   <MaxRemovalsPerTick>2</MaxRemovalsPerTick>
 
-  <!-- Broadcast a warning countdown before each interval pass, and a summary after. -->
+  <!-- ===================== WARNINGS / MESSAGES ===================== -->
   <BroadcastWarnings>true</BroadcastWarnings>
   <BroadcastSummary>true</BroadcastSummary>
-  <!-- Seconds-before-run at which a warning is broadcast. -->
+  <!-- Seconds-before-run at which a countdown warning is broadcast. Edit/add/remove entries. -->
   <WarningLeadSeconds>
     <int>60</int>
     <int>30</int>
     <int>10</int>
   </WarningLeadSeconds>
-
-  <!-- ===== Player-facing messages (fully customizable) =====
-       Placeholders in braces are substituted at runtime:
-       {DisplayName} {Module} {Seconds} {Count} {MinBlocks} {NoCleanTag} -->
+  <!-- Player-facing text. Placeholders: {DisplayName} {Module} {Seconds} {Count} {MinBlocks} {NoCleanTag} -->
   <WarningMessageTemplate>{DisplayName}: {Module} cleanup in {Seconds}s.</WarningMessageTemplate>
   <SummaryMessageTemplate>{DisplayName}: cleaned {Count} {Module}.</SummaryMessageTemplate>
-  <!-- Append the keep hint and recovery hint to !cleanerplus scan output. -->
   <ShowKeepHintOnScan>true</ShowKeepHintOnScan>
-  <!-- Max lines listed by !cleanerplus scan before it summarizes the rest. -->
   <ScanMaxLines>25</ScanMaxLines>
-  <!-- Shown to players so they know how to keep a grid. -->
   <KeepHintMessage>To keep a grid: give it a Beacon, build it past {MinBlocks} blocks, rename it from the default name, or add {NoCleanTag} to its name.</KeepHintMessage>
-  <!-- Shown so players know where a removed grid can be recovered. -->
-  <RecoveryHintMessage>Removed grids are recoverable: check Gridvault+ with !gridvault find &lt;name&gt;, or the server's local Cleanup Grids backup folder.</RecoveryHintMessage>
-  <!-- Leave empty to auto-generate the !cleanerplus policy text from the active rules; set to override it. -->
-  <PolicyMessageOverride />
+  <RecoveryHintMessage>Removed grids are recoverable: check Gridvault+ with !gridvault find &lt;name&gt;, or ask staff with !cleaner request.</RecoveryHintMessage>
+  <!-- Leave empty to auto-generate the !cleanerplus policy text; set text here to override it. -->
+  <PolicyMessageOverride></PolicyMessageOverride>
+  <!-- Optional locale file (key=value) that overrides the message templates above. Blank = English.
+       Example: <LocaleFile>Plugins\TROA-CleanerPlus\locales\de.lang</LocaleFile> -->
+  <LocaleFile></LocaleFile>
 
-  <!-- ===== Gridvault+ integration (backup-before-delete) ===== -->
-  <!-- Capture every removed grid into Gridvault+'s "Cleanup Grids" vault via its bridge API. -->
+  <!-- ===================== GRIDVAULT+ / BACKUP-BEFORE-DELETE ===================== -->
   <EnableGridvaultIntegration>true</EnableGridvaultIntegration>
-  <!-- If a backup cannot be made, DO NOT delete the grid (skip and log). Strongly recommended. -->
   <RequireGridvaultBackupBeforeDelete>true</RequireGridvaultBackupBeforeDelete>
-  <!-- Text written into the Gridvault+ audit reason. -->
   <GridvaultCleanupReasonPrefix>TROA Cleaner+</GridvaultCleanupReasonPrefix>
-  <!-- If Gridvault+ is not installed, capture removed grids into Cleaner+'s own local
-       "Cleanup Grids" folder (under TROA-CleanerPlusData) instead. -->
+  <!-- If Gridvault+ is not installed, capture removed grids into Cleaner+'s own local Cleanup Grids
+       folder (under TROA-CleanerPlusData) instead. -->
   <EnableLocalBackupFallback>true</EnableLocalBackupFallback>
 
-  <!-- ===== TROA grid keep policy ===== -->
+  <!-- ===================== TROA GRID KEEP POLICY ===================== -->
   <!-- A grid survives cleanup only if it meets ALL enabled requirements below. -->
   <RequireBeaconToKeep>true</RequireBeaconToKeep>
   <MinBlocksToKeep>25</MinBlocksToKeep>
   <RequireRenamedToKeep>true</RequireRenamedToKeep>
+  <!-- Optional PCU keep rule: a grid under this PCU also fails the policy. RequirePcuToKeep=false
+       disables it; MinPcuToKeep 0 = ignore. -->
+  <RequirePcuToKeep>false</RequirePcuToKeep>
+  <MinPcuToKeep>0</MinPcuToKeep>
   <!-- Names treated as "not renamed" (a trailing number like "Large Grid 1234" still matches). -->
   <DefaultGridNamePatterns>
     <string>Large Grid</string>
@@ -74,35 +77,40 @@
     <string>Unnamed Grid</string>
   </DefaultGridNamePatterns>
 
-  <!-- ===== Protection / whitelist (always keeps, overrides everything) ===== -->
+  <!-- ===================== PROTECTION / WHITELIST (always keeps) ===================== -->
   <!-- Put this tag anywhere in a grid's name to protect it. -->
   <NoCleanTag>[NOCLEAN]</NoCleanTag>
-  <!-- Keep any grid whose name contains one of these (case-insensitive). -->
-  <ProtectedNameSubstrings />
-  <!-- Keep any grid owned by one of these Steam IDs. Example:
+  <!-- Auto-protect any grid that contains a Safe Zone block (faction HQ style). -->
+  <Protect_SafeZoneGrids>true</Protect_SafeZoneGrids>
+  <!-- SAMPLES: keep any grid whose name contains one of these (case-insensitive). Edit or delete. -->
   <ProtectedNameSubstrings>
     <string>HQ</string>
     <string>Event</string>
   </ProtectedNameSubstrings>
+  <!-- SAMPLES: keep any grid owned by these Steam64 IDs. Replace with real IDs or delete. -->
   <ProtectedSteamIds>
     <unsignedLong>76561190000000000</unsignedLong>
-  </ProtectedSteamIds> -->
-  <ProtectedSteamIds />
-  <!-- Keep any grid owned by one of these faction tags. -->
-  <ProtectedFactionTags />
-  <!-- Keep any grid that contains a block whose type/subtype contains one of these. -->
-  <KeepIfBlockPresent />
-  <!-- Spherical GPS regions that are never cleaned. Example:
+  </ProtectedSteamIds>
+  <!-- SAMPLES: keep any grid owned by these faction tags. Edit or delete. -->
+  <ProtectedFactionTags>
+    <string>TROA</string>
+  </ProtectedFactionTags>
+  <!-- SAMPLES: keep any grid containing a block whose type/subtype contains one of these. Edit/delete. -->
+  <KeepIfBlockPresent>
+    <string>SafeZone</string>
+  </KeepIfBlockPresent>
+  <!-- SAMPLES: spherical GPS regions that are never cleaned. Edit coordinates/radius or delete. -->
   <ProtectionZones>
     <ProtectionZone>
       <Name>Trade Hub</Name>
-      <X>0</X><Y>0</Y><Z>0</Z>
+      <X>0</X>
+      <Y>0</Y>
+      <Z>0</Z>
       <RadiusMeters>5000</RadiusMeters>
     </ProtectionZone>
-  </ProtectionZones> -->
-  <ProtectionZones />
+  </ProtectionZones>
 
-  <!-- ===== Floating objects module ===== -->
+  <!-- ===================== FLOATING OBJECTS MODULE ===================== -->
   <FloatingObjects_Enabled>true</FloatingObjects_Enabled>
   <!-- Interval | RealTime | CommandOnly -->
   <FloatingObjects_Mode>Interval</FloatingObjects_Mode>
@@ -113,35 +121,31 @@
   <!-- Never remove an object within this many meters of an online player. 0 = ignore. -->
   <FloatingObjects_MinDistanceFromPlayers>0</FloatingObjects_MinDistanceFromPlayers>
 
-  <!-- ===== Grid cleanup module ===== -->
+  <!-- ===================== GRID CLEANUP MODULE ===================== -->
   <Grids_Enabled>true</Grids_Enabled>
   <Grids_Mode>Interval</Grids_Mode>
   <Grids_IntervalMinutes>30</Grids_IntervalMinutes>
   <!-- Include static (anchored) grids? Off by default. -->
   <Grids_IncludeStatic>false</Grids_IncludeStatic>
-  <!-- Also remove ownerless grids. -->
   <Grids_RemoveOwnerless>true</Grids_RemoveOwnerless>
-  <!-- Also remove grids with no functional blocks (dead debris). -->
   <Grids_RemoveNoFunctional>true</Grids_RemoveNoFunctional>
   <!-- Spare any eligible grid within this many meters of an online player. 0 = ignore. -->
   <Grids_MinDistanceFromPlayers>0</Grids_MinDistanceFromPlayers>
   <!-- Only clean an eligible owned grid if its owner has been offline this many days. 0 = ignore. -->
   <Grids_OwnerOfflineDays>0</Grids_OwnerOfflineDays>
+  <!-- Treat mechanically connected subgrids (rotor/piston) as one unit. -->
+  <Grids_TreatConnectedAsGroup>true</Grids_TreatConnectedAsGroup>
 
-  <!-- ===== Dead-character module (optional, off by default) ===== -->
+  <!-- ===================== DEAD-CHARACTER MODULE (optional) ===================== -->
   <Corpses_Enabled>false</Corpses_Enabled>
   <Corpses_Mode>Interval</Corpses_Mode>
   <Corpses_IntervalMinutes>20</Corpses_IntervalMinutes>
   <Corpses_MaxAgeMinutes>30</Corpses_MaxAgeMinutes>
 
-  <!-- ===== Connected-grid awareness ===== -->
-  <!-- Treat mechanically connected subgrids (rotor/piston) as one unit: kept if any member passes
-       the policy; all members are backed up before any is removed. -->
-  <Grids_TreatConnectedAsGroup>true</Grids_TreatConnectedAsGroup>
-
-  <!-- ===== Per-faction / per-zone policy overrides =====
-       Each override changes only the fields it sets (MinBlocksToKeep -1 = inherit; flags Inherit|On|Off).
-       Match is FactionTag or ZoneName; a zone match beats a faction match. Example:
+  <!-- ===================== PER-FACTION / PER-ZONE POLICY OVERRIDES ===================== -->
+  <!-- SAMPLES: each override changes only the fields it sets. Match = FactionTag or ZoneName (a zone
+       match beats a faction match). MinBlocksToKeep/IntervalMinutes -1 = inherit. Flags = Inherit|On|Off.
+       Edit or delete. -->
   <PolicyOverrides>
     <PolicyOverride>
       <Match>ZoneName</Match>
@@ -151,31 +155,37 @@
       <RequireBeaconToKeep>Off</RequireBeaconToKeep>
       <Enabled>Inherit</Enabled>
     </PolicyOverride>
-  </PolicyOverrides> -->
-  <PolicyOverrides />
+    <PolicyOverride>
+      <Match>FactionTag</Match>
+      <Value>NPC</Value>
+      <MinBlocksToKeep>-1</MinBlocksToKeep>
+      <IntervalMinutes>-1</IntervalMinutes>
+      <RequireBeaconToKeep>Inherit</RequireBeaconToKeep>
+      <Enabled>Off</Enabled>
+    </PolicyOverride>
+  </PolicyOverrides>
 
-  <!-- ===== Discord audit webhook (pretty embeds) ===== -->
+  <!-- ===================== DISCORD AUDIT WEBHOOK ===================== -->
   <EnableAuditWebhook>false</EnableAuditWebhook>
   <!-- Full Discord webhook URL. Keep private; it is never written to logs. -->
-  <AuditWebhookUrl />
+  <AuditWebhookUrl></AuditWebhookUrl>
   <WebhookName>Cleaner+</WebhookName>
   <SendStartupWebhookTest>true</SendStartupWebhookTest>
-  <!-- Which events post an embed. -->
   <WebhookOnPass>true</WebhookOnPass>
   <WebhookOnDigest>true</WebhookOnDigest>
   <!-- Concealment effectiveness report (coverage %, concealed/revealed). -->
   <WebhookOnConceal>false</WebhookOnConceal>
 
-  <!-- ===== Scheduled digest ("world is clean / N grids flagged") ===== -->
+  <!-- ===================== SCHEDULED DIGEST ===================== -->
   <Digest_Enabled>false</Digest_Enabled>
   <Digest_IntervalMinutes>60</Digest_IntervalMinutes>
   <Digest_ToAdminsInGame>true</Digest_ToAdminsInGame>
   <Digest_ToWebhook>true</Digest_ToWebhook>
 
-  <!-- ===== Grid concealment (EXPERIMENTAL, off by default) =====
+  <!-- ===================== GRID CONCEALMENT (EXPERIMENTAL, off by default) =====================
        Reversibly pauses idle grids (removes them from simulation, not deletion) to reclaim sim
        speed; reveals them when a player approaches; reveals everything on world unload. Never
-       conceals static, protected, or spawn-capable (medical/cryo) grids. -->
+       conceals static, protected, or (unless RevealOnSpawn) spawn-capable medical/cryo grids. -->
   <Conceal_Enabled>false</Conceal_Enabled>
   <Conceal_Mode>Interval</Conceal_Mode>
   <Conceal_IntervalMinutes>5</Conceal_IntervalMinutes>
@@ -185,26 +195,29 @@
   <Conceal_RevealRadiusMeters>2000</Conceal_RevealRadiusMeters>
   <Conceal_MaxPerTick>2</Conceal_MaxPerTick>
   <Conceal_SkipStatic>true</Conceal_SkipStatic>
+  <!-- Allow concealing medbay/cryo grids and reveal them when a player spawns/logs in. -->
+  <Conceal_RevealOnSpawn>false</Conceal_RevealOnSpawn>
+  <!-- A Programmable Block / Remote Control "Cleaner+ Keep Alive" action holds a grid hot on demand. -->
+  <Conceal_KeepAliveAction>true</Conceal_KeepAliveAction>
+  <Conceal_KeepAliveMinutes>30</Conceal_KeepAliveMinutes>
+  <!-- Keep a grid hot when it has an antenna owned by an online player. -->
+  <Conceal_KeepAliveAntenna>true</Conceal_KeepAliveAntenna>
 
-  <!-- ===== Self-healing performance (v1.2.0) =====
-       Adaptive intervals scale by sim health (healthy=longer, degraded=shorter). Emergency
-       concealment kicks in when sim ratio stays below the threshold. Keep-alive spares grids with
-       an antenna owned by an online player. Point ProfilerMetricsFile at TROA Profiler+'s
-       prometheus.prom / latest.json to drive sim readings; blank reads the engine directly. -->
+  <!-- ===================== SELF-HEALING PERFORMANCE ===================== -->
+  <!-- Adaptive intervals scale by sim health (healthy=longer, degraded=shorter). Emergency
+       concealment kicks in when sim ratio stays below the threshold. ProfilerMetricsFile can point
+       at TROA Profiler+'s prometheus.prom / latest.json to source sim speed; blank reads the engine. -->
   <Adaptive_Enabled>false</Adaptive_Enabled>
   <Adaptive_MinIntervalMinutes>5</Adaptive_MinIntervalMinutes>
   <Adaptive_MaxIntervalMinutes>120</Adaptive_MaxIntervalMinutes>
   <Adaptive_HealthySimSpeed>0.95</Adaptive_HealthySimSpeed>
   <Adaptive_DegradedSimSpeed>0.8</Adaptive_DegradedSimSpeed>
-  <ProfilerMetricsFile />
+  <ProfilerMetricsFile></ProfilerMetricsFile>
   <Conceal_EmergencyEnabled>false</Conceal_EmergencyEnabled>
   <Conceal_EmergencyThreshold>0.6</Conceal_EmergencyThreshold>
   <Conceal_EmergencyMaxPerTick>8</Conceal_EmergencyMaxPerTick>
-  <Conceal_KeepAliveAntenna>true</Conceal_KeepAliveAntenna>
 
-  <!-- ===== Player-fair retention (v1.2.0) =====
-       Warn a grid's owner before it is cleaned (with a lead + login grace), let players self-protect
-       a limited number of grids, and enforce per-player grid/PCU quotas. -->
+  <!-- ===================== PLAYER-FAIR RETENTION ===================== -->
   <Warn_Enabled>true</Warn_Enabled>
   <Warn_LeadMinutes>10</Warn_LeadMinutes>
   <Warn_ToOwnerChat>true</Warn_ToOwnerChat>
@@ -222,26 +235,34 @@
   <!-- Flag a player's smallest grids for cleanup when over quota (keeps their biggest). -->
   <Quota_FlagOverLimitGrids>false</Quota_FlagOverLimitGrids>
 
-  <!-- ===== Admin control & scheduling (v1.2.0) =====
-       Scheduled cleanup events at a local time-of-day, quiet-hours suppression, undo of the last
-       pass, and a player restore-request workflow. Example event/quiet-hours:
-  <ScheduledEvents>
-    <ScheduledEvent><Name>Nightly Cleanup</Name><Time>04:00</Time><Days></Days><Module>all</Module><WarnSeconds>60</WarnSeconds></ScheduledEvent>
-  </ScheduledEvents>
-  <QuietHours>
-    <TimeWindow><Start>18:00</Start><End>23:00</End><Days>Sat,Sun</Days></TimeWindow>
-  </QuietHours> -->
+  <!-- ===================== ADMIN CONTROL & SCHEDULING ===================== -->
   <Schedule_Enabled>false</Schedule_Enabled>
-  <ScheduledEvents />
+  <!-- SAMPLES: cleanup events at a local time-of-day. Days empty = every day. Module = a module key
+       or "all". Edit or delete. Only run when Schedule_Enabled is true. -->
+  <ScheduledEvents>
+    <ScheduledEvent>
+      <Name>Nightly Cleanup</Name>
+      <Time>04:00</Time>
+      <Days></Days>
+      <Module>all</Module>
+      <WarnSeconds>60</WarnSeconds>
+    </ScheduledEvent>
+  </ScheduledEvents>
   <QuietHours_Enabled>false</QuietHours_Enabled>
-  <QuietHours />
+  <!-- SAMPLES: windows (local time) where automatic passes are suppressed. Days empty = every day.
+       Windows may wrap past midnight (e.g. 22:00-06:00). Edit or delete. -->
+  <QuietHours>
+    <TimeWindow>
+      <Start>18:00</Start>
+      <End>23:00</End>
+      <Days>Fri,Sat,Sun</Days>
+    </TimeWindow>
+  </QuietHours>
   <Undo_Enabled>true</Undo_Enabled>
   <Undo_WindowMinutes>30</Undo_WindowMinutes>
   <RestoreRequests_Enabled>true</RestoreRequests_Enabled>
 
-  <!-- ===== Insight & analytics (v1.2.0) =====
-       Rolling History CSV, Prometheus/JSON metrics export for Grafana, and a periodic Discord
-       server-health dashboard embed. -->
+  <!-- ===================== INSIGHT & ANALYTICS ===================== -->
   <History_Enabled>true</History_Enabled>
   <History_RetainDays>30</History_RetainDays>
   <Metrics_Enabled>false</Metrics_Enabled>

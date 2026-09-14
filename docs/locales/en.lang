@@ -1,0 +1,11 @@
+# TROA Cleaner+ English locale pack (default strings).
+# Copy this file, translate the values, and point LocaleFile at it in TROA-CleanerPlus.cfg.
+# Format: Key=Value (one per line). Lines starting with # are ignored.
+# Placeholders in braces are substituted at runtime and must be kept as-is.
+
+WarningMessageTemplate={DisplayName}: {Module} cleanup in {Seconds}s.
+SummaryMessageTemplate={DisplayName}: cleaned {Count} {Module}.
+KeepHintMessage=To keep a grid: give it a Beacon, build it past {MinBlocks} blocks, rename it from the default name, or add {NoCleanTag} to its name.
+RecoveryHintMessage=Removed grids are recoverable: check Gridvault+ with !gridvault find <name>, or ask staff with !cleaner request.
+PolicyMessageOverride=
+Warn_MessageTemplate={DisplayName}: your grid '{Grid}' is flagged for cleanup in ~{Minutes} min ({Reason}). Visit it or use !cleaner keep {Grid} to protect it.
