@@ -1,3 +1,26 @@
+# v1.5.0 - Restarter, boost fast-restart, and startup watchdog
+
+- **Restarter** (`Restart_Enabled`, off by default): scheduled (`RestartSchedule` HH:mm + days),
+  interval (`Restart_EveryHours`), performance (low sim for N min / `Restart_MaxMemoryMb`), uptime
+  (`Restart_MaxUptimeHours`), empty-server (with a hard deadline), and manual triggers, each with a
+  broadcast + Discord countdown.
+- **Three execution modes** (`Restart_Mode`): TorchNative (`ITorchServer.Restart`), ProcessExit (for
+  AMP/Wine wrappers), and ExternalCommand — all via guarded reflection.
+- **Pre-shutdown pipeline** (startup-speed win): trim the world (`Restart_TrimBeforeSave`) then a
+  verified save (`Restart_SaveBeforeRestart`, aborts on save failure) so the next boot loads a smaller
+  world faster.
+- **Boost / tiered restart** (`Restart_BoostEnabled`): prefers a fast in-process **soft session
+  reload** and forces a full process restart every `Restart_FullEveryNth` to clear memory; optional
+  mod-cache prewarm; Cleaner+ state is flushed pre-restart so it resumes instantly. (A plugin cannot
+  keep the loaded world in RAM across a full process restart; the speed comes from soft-reload + a
+  smaller save.)
+- **Startup watchdog** (`Startup_WatchdogEnabled`): an off-thread timer auto-recovers a boot that
+  hangs past `Startup_HangTimeoutMinutes`, and a **boot-readiness report** logs/Discords load time +
+  grids loaded.
+- Commands: `!cleanerplusadmin restart now [min] [full|soft] | cancel | delay <min> | skip | status | boot`.
+- Built on verified Torch API (`ITorchServer.Restart`, `Torch.Save`/`SaveResult`, `GameStateChanged`,
+  `UnloadSession`/`LoadSession`). Everything is off by default and dry-run testable (`Restart_DryRun`).
+
 # v1.4.0 - Lifecycle, Hangar stow, Respawn/NPC cleanup, persistent age, claim
 
 - **Graduated abandonment lifecycle** (`Lifecycle_Enabled`, owned grids): instead of instant deletion,

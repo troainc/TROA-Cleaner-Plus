@@ -9,9 +9,9 @@ it keep the world clean without downtime.
 
 ## Current Release
 
-- Version: `v1.4.0`
-- Package: `TROA-CleanerPlus-v1.4.0.zip`
-- SHA-256: `4ABBA05A7B049F382F4E69E18E460046FC05B86ABE38BEB3F7AA52FBAB96BAF4`
+- Version: `v1.5.0`
+- Package: `TROA-CleanerPlus-v1.5.0.zip`
+- SHA-256: `88ADD799D98A3039379CD1E4729922F648096E4E9ABE48D971A898AB19B35207`
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
@@ -58,6 +58,43 @@ keep a grid regardless of the policy.
 | Grids | `grids` | on | Grids that fail the keep policy, plus (optionally) ownerless grids and grids with no functional blocks. Static grids are excluded unless enabled. Connected subgrids are treated as one unit. |
 | Dead characters | `corpses` | off | Dead character bodies older than `Corpses_MaxAgeMinutes`. |
 
+## v1.1.0 features
+
+- **Grid concealment (experimental, off by default).** A reversible layer between "keep active" and
+  "delete": idle grids far from players are removed from the simulation/update path (not deleted) to
+  reclaim sim speed, and revealed when a player returns. Never conceals static, protected, or
+  spawn-capable (medical/cryo) grids, and reveals everything on world unload. Enable with
+  `Conceal_Enabled`; drive it with `!cleanerplusadmin conceal now|status` and `reveal all`.
+- **Discord audit with pretty embeds.** Consolidated per-pass embed (removed / backed up / skipped),
+  a scheduled digest embed, and a **concealment-effectiveness** embed with a coverage progress bar.
+  Quiet-failure circuit (3 fails → 10-min pause); the webhook URL is never logged. Configure
+  `EnableAuditWebhook` + `AuditWebhookUrl`; check with `!cleanerplusadmin webhook [test|reset]`.
+- **Connected-grid awareness.** Mechanically connected subgrids are evaluated and backed up as one
+  unit (`Grids_TreatConnectedAsGroup`, default on).
+- **Per-faction / per-zone policies.** Different block minimums, beacon requirement, or enable state
+  inside a faction or GPS zone (`PolicyOverrides`; most-specific wins).
+- **Owner-offline seeding.** Historical last-login data is imported once at first load so
+  `Grids_OwnerOfflineDays` is accurate immediately after install.
+- **Scheduled digest.** Periodic "world is clean / N grids flagged" report to log, chat, and Discord
+  (`Digest_*`; `!cleanerplusadmin digest now`).
+- **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
+  restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
+
+## v1.5.0 features — Restarter + boost + startup watchdog
+
+- **Automated restarter** (`Restart_Enabled`) — scheduled / interval / performance / uptime /
+  empty-server / manual triggers, with broadcast + Discord countdowns.
+- **Three execution modes** (`Restart_Mode`): `TorchNative`, `ProcessExit` (AMP/Wine), `ExternalCommand`.
+- **Faster boots** — a pre-shutdown **trim + verified save** shrinks the world so the next load is
+  quicker; a **boot-readiness report** logs how long boots take.
+- **Boost / tiered restart** (`Restart_BoostEnabled`) — fast in-process **soft reload** for frequent
+  restarts, a **full** process restart every `Restart_FullEveryNth` to clear memory, plus mod-cache
+  prewarm and instant plugin-state resume. *(A plugin can't keep the loaded world in RAM across a full
+  process restart; speed comes from soft-reload + a smaller saved world.)*
+- **Startup watchdog** (`Startup_WatchdogEnabled`) — auto-recovers a boot that hangs past the timeout.
+- Commands: `!cleanerplusadmin restart now [min] [full|soft] | cancel | delay <min> | skip | status | boot`.
+- Everything off by default and testable with `Restart_DryRun`.
+
 ## v1.4.0 features
 
 - **Graduated abandonment lifecycle** (`Lifecycle_Enabled`) — owned grids go warn(+GPS) -> depower ->
@@ -99,28 +136,6 @@ keep a grid regardless of the policy.
   top-offender breakdown in the digest, Prometheus/JSON metrics export for Grafana
   (`Metrics_Enabled`), and a periodic Discord server-health dashboard (`Dashboard_Enabled`).
 
-## v1.1.0 features
-
-- **Grid concealment (experimental, off by default).** A reversible layer between "keep active" and
-  "delete": idle grids far from players are removed from the simulation/update path (not deleted) to
-  reclaim sim speed, and revealed when a player returns. Never conceals static, protected, or
-  spawn-capable (medical/cryo) grids, and reveals everything on world unload. Enable with
-  `Conceal_Enabled`; drive it with `!cleanerplusadmin conceal now|status` and `reveal all`.
-- **Discord audit with pretty embeds.** Consolidated per-pass embed (removed / backed up / skipped),
-  a scheduled digest embed, and a **concealment-effectiveness** embed with a coverage progress bar.
-  Quiet-failure circuit (3 fails → 10-min pause); the webhook URL is never logged. Configure
-  `EnableAuditWebhook` + `AuditWebhookUrl`; check with `!cleanerplusadmin webhook [test|reset]`.
-- **Connected-grid awareness.** Mechanically connected subgrids are evaluated and backed up as one
-  unit (`Grids_TreatConnectedAsGroup`, default on).
-- **Per-faction / per-zone policies.** Different block minimums, beacon requirement, or enable state
-  inside a faction or GPS zone (`PolicyOverrides`; most-specific wins).
-- **Owner-offline seeding.** Historical last-login data is imported once at first load so
-  `Grids_OwnerOfflineDays` is accurate immediately after install.
-- **Scheduled digest.** Periodic "world is clean / N grids flagged" report to log, chat, and Discord
-  (`Digest_*`; `!cleanerplusadmin digest now`).
-- **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
-  restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
-  
 ## Commands
 
 ### Players (moderator/read)
@@ -161,6 +176,8 @@ keep a grid regardless of the policy.
 | `!cleanerplusadmin schedule list` | Lists scheduled cleanup events. |
 | `!cleanerplusadmin simspeed` | Shows the current server sim ratio Cleaner+ sees. |
 | `!cleanerplusadmin lifecycle status` / `stow status` | Lifecycle stage counts / TROA-Hanger stow availability. |
+| `!cleanerplusadmin restart now [min] [full\|soft]` | Arm a restart (soft reload or full). |
+| `!cleanerplusadmin restart cancel \| delay <min> \| skip \| status \| boot` | Manage the armed restart / last boot report. |
 
 Modules are `floatingobjects`, `grids`, and `corpses`.
 
@@ -297,6 +314,16 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `Stow_Enabled` / `Stow_OnlyOwnerOffline` | `false`/`true` | Auto-stow owned grids into TROA-Hanger instead of deleting. |
 | `Lifecycle_Enabled` / `Lifecycle_Depower` | `false`/`true` | Graduated abandonment for owned grids. |
 | `Lifecycle_DepowerMinutes` / `Lifecycle_DisposeMinutes` | `60`/`1440` | Lifecycle stage timers. |
+| `Restart_Enabled` / `Restart_Mode` | `false` / `ProcessExit` | Enable the restarter; execution mode (TorchNative/ProcessExit/ExternalCommand). |
+| `RestartSchedule` / `Restart_EveryHours` | samples / `0` | Scheduled restart times (Module=full/soft) and interval. |
+| `Restart_SimSpeedFloor` / `Restart_SimSpeedMinutes` / `Restart_MaxMemoryMb` / `Restart_MaxUptimeHours` | `0`/`10`/`0`/`0` | Performance & uptime triggers (0 = off). |
+| `Restart_EmptyThreshold` / `Restart_EmptyDeadlineMinutes` | `0`/`60` | Restart when near-empty, forced at the deadline. |
+| `Restart_WarnLeadSeconds` | `600..10` | Countdown warning lead times. |
+| `Restart_TrimBeforeSave` / `Restart_SaveBeforeRestart` / `Restart_AbortOnSaveFail` | `true` | Pre-shutdown trim + verified save. |
+| `Restart_BoostEnabled` / `Restart_FullEveryNth` / `Restart_ModCachePrewarm` | `true`/`4`/`false` | Boost: soft reloads + periodic full restart + cache prewarm. |
+| `Restart_DryRun` | `false` | Run the countdown/pipeline but don't actually restart. |
+| `Startup_WatchdogEnabled` / `Startup_HangTimeoutMinutes` / `Startup_HangAction` | `false`/`15`/`ProcessExit` | Auto-recover a hung boot. |
+| `Startup_BootReport` | `true` | Log/Discord boot time + grids loaded. |
 
 ## "Why was my grid cleaned?"
 

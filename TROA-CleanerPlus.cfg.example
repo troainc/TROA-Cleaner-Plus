@@ -320,4 +320,73 @@
   <Lifecycle_Depower>true</Lifecycle_Depower>
   <Lifecycle_DepowerMinutes>60</Lifecycle_DepowerMinutes>
   <Lifecycle_DisposeMinutes>1440</Lifecycle_DisposeMinutes>
+
+  <!-- ===================== RESTARTER + BOOST (v1.5.0, off by default) =====================
+       Scheduled/performance/uptime/empty/manual restarts with a countdown, a pre-shutdown trim+save
+       so the next boot loads faster, and a "boost" tiered mode that prefers a fast in-process soft
+       reload over a full process restart (a full restart runs every Nth time to clear memory).
+       NOTE: a plugin cannot preserve the loaded world in RAM across a full process restart; the speed
+       comes from soft-reload + a smaller saved world + mod-cache prewarm. -->
+  <Restart_Enabled>false</Restart_Enabled>
+  <!-- TorchNative | ProcessExit (best for AMP/Wine wrappers) | ExternalCommand -->
+  <Restart_Mode>ProcessExit</Restart_Mode>
+  <Restart_ExternalCommand></Restart_ExternalCommand>
+  <Restart_ExitCode>0</Restart_ExitCode>
+  <!-- SAMPLE scheduled restarts: Time (HH:mm local), Days (empty=every day), Module = full|soft. -->
+  <RestartSchedule>
+    <ScheduledEvent>
+      <Name>Morning Full</Name>
+      <Time>06:00</Time>
+      <Days></Days>
+      <Module>full</Module>
+      <WarnSeconds>600</WarnSeconds>
+    </ScheduledEvent>
+    <ScheduledEvent>
+      <Name>Midday Soft</Name>
+      <Time>13:00</Time>
+      <Days></Days>
+      <Module>soft</Module>
+      <WarnSeconds>300</WarnSeconds>
+    </ScheduledEvent>
+  </RestartSchedule>
+  <!-- Also restart every N hours (0 = off). -->
+  <Restart_EveryHours>0</Restart_EveryHours>
+  <!-- Performance/uptime triggers (0 = off). -->
+  <Restart_SimSpeedFloor>0</Restart_SimSpeedFloor>
+  <Restart_SimSpeedMinutes>10</Restart_SimSpeedMinutes>
+  <Restart_MaxMemoryMb>0</Restart_MaxMemoryMb>
+  <Restart_MaxUptimeHours>0</Restart_MaxUptimeHours>
+  <!-- Empty-server: only restart when players <= threshold, but force it after the deadline. -->
+  <Restart_EmptyThreshold>0</Restart_EmptyThreshold>
+  <Restart_EmptyDeadlineMinutes>60</Restart_EmptyDeadlineMinutes>
+  <!-- Countdown warning lead times (seconds). -->
+  <Restart_WarnLeadSeconds>
+    <int>600</int>
+    <int>300</int>
+    <int>120</int>
+    <int>60</int>
+    <int>30</int>
+    <int>10</int>
+  </Restart_WarnLeadSeconds>
+  <!-- Pre-shutdown pipeline. -->
+  <Restart_TrimBeforeSave>true</Restart_TrimBeforeSave>
+  <Restart_SaveBeforeRestart>true</Restart_SaveBeforeRestart>
+  <Restart_AbortOnSaveFail>true</Restart_AbortOnSaveFail>
+  <!-- Boost: soft reloads for frequent restarts, one full every Nth to clear memory. -->
+  <Restart_BoostEnabled>true</Restart_BoostEnabled>
+  <Restart_FullEveryNth>4</Restart_FullEveryNth>
+  <Restart_ModCachePrewarm>false</Restart_ModCachePrewarm>
+  <!-- Announce + run the whole pipeline but do NOT actually restart (for testing). -->
+  <Restart_DryRun>false</Restart_DryRun>
+  <!-- Placeholders: {DisplayName} {Time} {Seconds} {Minutes} {Reason} -->
+  <Restart_WarnMessageTemplate>{DisplayName}: server restart in {Time} ({Reason}).</Restart_WarnMessageTemplate>
+  <Restart_BootMessageTemplate>{DisplayName}: server is back online.</Restart_BootMessageTemplate>
+
+  <!-- ===================== STARTUP WATCHDOG + BOOT REPORT (v1.5.0) ===================== -->
+  <!-- Auto-recover a boot that hangs past the timeout, and report how long boots take. -->
+  <Startup_WatchdogEnabled>false</Startup_WatchdogEnabled>
+  <Startup_HangTimeoutMinutes>15</Startup_HangTimeoutMinutes>
+  <!-- AlertOnly | ProcessExit | FullRestart -->
+  <Startup_HangAction>ProcessExit</Startup_HangAction>
+  <Startup_BootReport>true</Startup_BootReport>
 </CleanerConfig>
