@@ -1,3 +1,16 @@
+# v1.7.0 - Persistent Discord operations dashboard
+
+- **One editable dashboard message:** `Dashboard_Enabled` now creates a single Discord operations embed, then updates it in place instead of posting a new health message every interval.
+- **Operator controls:** `!cleanerplusadmin dashboard status|now|reset` reports dashboard state, forces an immediate update, or clears the local message link so the next update creates a replacement.
+- **Service coverage:** the dashboard reports aggregate master/dry-run state, SimSpeed, cleanup candidates, concealment, quota flags, restart/watchdog state, webhook health, and module activity.
+- **Safe local state:** `TROA-CleanerPlusData/OperationsDashboard.state` retains only Discord's numeric message ID. Webhook URLs, player identities, grid identities, IDs, positions, backups, and credentials are not included.
+# v1.6.0 - Owner operations webhooks and command presets
+
+- **Mixed command webhook delivery:** every command can emit a safe Discord audit receipt when enabled; player receipts and explicitly routed restore/ownership/GPS administrator output are independently opt-in.
+- **Sanitized resource webhooks:** `!cleanerplusadmin webhook resource` supports `status`, `scan`, `health`, `quota`, `conceal`, `schedule`, `restart`, and `modules`, plus trailing `--count`, `--title`, `--note`, and `--fresh` options.
+- **Saved command presets:** bounded local `command save|list|show|remove` references help operators reuse standard health and cleanup workflows without automatic command execution.
+- **Privacy boundary:** detailed resource panels intentionally omit player names, grid names, IDs, Steam IDs, GPS coordinates, backup paths, and webhook credentials.
+
 # v1.5.0 - Restarter, boost fast-restart, and startup watchdog
 
 - **Restarter** (`Restart_Enabled`, off by default): scheduled (`RestartSchedule` HH:mm + days),

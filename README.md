@@ -9,9 +9,9 @@ it keep the world clean without downtime.
 
 ## Current Release
 
-- Version: `v1.5.0`
-- Package: `TROA-CleanerPlus-v1.5.0.zip`
-- SHA-256: `88ADD799D98A3039379CD1E4729922F648096E4E9ABE48D971A898AB19B35207`
+- Version: `v1.7.0`
+- Package: `TROA-CleanerPlus-v1.7.0.zip`
+- SHA-256: `B251FD13E46E0498405BC73A4FD7A36D0FF979896901176FB5669426CA58FF7D`
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
@@ -80,6 +80,12 @@ keep a grid regardless of the policy.
 - **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
   restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
 
+## v1.7.0 features — persistent operations dashboard and owner webhooks
+
+- **Mixed command delivery.** Set `EnableCommandWebhookMirror=true` (or run `!cleanerplusadmin webhook mirror on`) to create a Discord audit receipt for every Cleaner+ command while preserving full command text locally. Player command receipts stay off unless `MirrorPlayerCommandResults=true`. Restore, ownership, Steam-ID, and GPS administrator details require the separate `AllowSensitiveCommandWebhookMirror=true` opt-in.
+- **Persistent operations dashboard.** With `Dashboard_Enabled=true`, Cleaner+ creates one Discord embed and edits that same message at `Dashboard_IntervalMinutes`. It shows aggregate master/dry-run state, SimSpeed, cleanup candidates, module activity, quota flags, concealment, restart/watchdog state, and webhook health. Use `!cleanerplusadmin dashboard status`, `dashboard now`, or `dashboard reset`; the local dashboard state stores only the Discord message ID, never the webhook URL.
+- **Detailed owner resource panels.** `!cleanerplusadmin webhook resource <status|scan|health|quota|conceal|schedule|restart|modules> [--count N] [--title "text"] [--note "text"] [--fresh]` queues an aggregate, privacy-safe Discord embed. It reports service health, cleanup candidate totals, quota counts, concealment coverage, schedules, restart configuration, and module activity without player names, grid names, IDs, GPS, backup paths, or webhook credentials.
+- **Reusable command presets.** `!cleanerplusadmin command save|list|show|remove` stores up to 25 bounded, copy-ready Cleaner+ lines in the local configuration. Presets are never automatically executed, so Torch permission checks still apply when an operator reuses one.
 ## v1.5.0 features — Restarter + boost + startup watchdog
 
 - **Automated restarter** (`Restart_Enabled`) — scheduled / interval / performance / uptime /
@@ -134,7 +140,7 @@ keep a grid regardless of the policy.
   (`requests` / `approve` / `deny`).
 - **Insight & analytics.** Per-pass sim-speed delta, rolling `History/*.csv`, clean-reason +
   top-offender breakdown in the digest, Prometheus/JSON metrics export for Grafana
-  (`Metrics_Enabled`), and a periodic Discord server-health dashboard (`Dashboard_Enabled`).
+  (`Metrics_Enabled`), and one editable Discord operations dashboard (`Dashboard_Enabled`).
 
 ## Commands
 
@@ -167,7 +173,10 @@ keep a grid regardless of the policy.
 | `!cleanerplusadmin conceal now\|status` | Runs an experimental concealment pass / shows coverage. |
 | `!cleanerplusadmin reveal all` | Reveals every concealed grid. |
 | `!cleanerplusadmin digest now` | Sends the cleanup digest immediately. |
-| `!cleanerplusadmin webhook [test\|reset]` | Discord audit status, test embed, or reset the failure circuit. |
+| `!cleanerplusadmin webhook [test|reset|mirror|sensitive|players] [on|off]` | Discord status/test/reset and explicit mirror privacy controls. |
+| `!cleanerplusadmin webhook resource <type> [--count N] [--title "text"] [--note "text"] [--fresh]` | Detailed sanitized owner panel: status, scan, health, quota, concealment, schedule, restart, or modules. |
+| `!cleanerplusadmin dashboard [status\|now\|reset]` | Show, immediately refresh, or relink the one editable operations dashboard message. |
+| `!cleanerplusadmin command save|list|show|remove` | Store, retrieve, and remove local copy-ready command presets. |
 | `!cleanerplusadmin restore list [steamid]` | Lists local Cleanup Grids backups (no-Gridvault fallback). |
 | `!cleanerplusadmin restore <gridId> [x y z]` | Restores a grid from the local Cleanup Grids folder near you or at GPS. |
 | `!cleanerplusadmin undo` | Restores the grids removed by the last cleanup pass (within the undo window). |
@@ -266,6 +275,10 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `WebhookName` | `Cleaner+` | Discord sender name. |
 | `SendStartupWebhookTest` | `true` | Post a test embed when the webhook is first configured. |
 | `WebhookOnPass` / `WebhookOnDigest` / `WebhookOnConceal` | `true`/`true`/`false` | Which events post embeds. |
+| `EnableCommandWebhookMirror` | `false` | Mirror every command as a safe Discord audit receipt. |
+| `AllowSensitiveCommandWebhookMirror` | `false` | Permit explicitly routed restore/ownership/GPS admin output to Discord. |
+| `MirrorPlayerCommandResults` | `false` | Mirror generic player-command receipts; player/grid details stay local. |
+| `SavedCommandReferences` | empty | Up to 25 bounded local copy-ready command presets; never auto-executed. |
 | `Digest_Enabled` | `false` | Enable the periodic digest report. |
 | `Digest_IntervalMinutes` | `60` | Digest period. |
 | `Digest_ToAdminsInGame` / `Digest_ToWebhook` | `true` | Digest destinations (chat / Discord). |
@@ -300,7 +313,7 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `RestoreRequests_Enabled` | `true` | Allow `!cleaner request` / admin approve-deny. |
 | `History_Enabled` / `History_RetainDays` | `true`/`30` | Rolling pass history CSV. |
 | `Metrics_Enabled` | `false` | Write Prometheus/JSON metrics for Grafana. |
-| `Dashboard_Enabled` / `Dashboard_IntervalMinutes` | `false`/`30` | Periodic Discord server-health dashboard. |
+| `Dashboard_Enabled` / `Dashboard_IntervalMinutes` | `false`/`30` | One editable Discord operations dashboard; updates aggregate state in place. |
 | `RequirePcuToKeep` / `MinPcuToKeep` | `false`/`0` | PCU keep rule: a grid under this PCU fails the policy. |
 | `Protect_SafeZoneGrids` | `true` | Auto-protect any grid containing a Safe Zone block. |
 | `LocaleFile` | empty | Path to a locale pack that overrides all message templates. |

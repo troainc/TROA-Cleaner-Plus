@@ -174,7 +174,23 @@
   <WebhookOnPass>true</WebhookOnPass>
   <WebhookOnDigest>true</WebhookOnDigest>
   <!-- Concealment effectiveness report (coverage %, concealed/revealed). -->
-  <WebhookOnConceal>false</WebhookOnConceal>
+  <WebhookOnConceal>false</WebhookOnConceal>  <!-- Mirror each command as a safe Discord audit receipt. Detailed aggregate panels use !cleanerplusadmin webhook resource. -->
+  <EnableCommandWebhookMirror>false</EnableCommandWebhookMirror>
+  <!-- Restore, ownership, Steam-ID, and GPS administrator output only mirrors when explicitly enabled. -->
+  <AllowSensitiveCommandWebhookMirror>false</AllowSensitiveCommandWebhookMirror>
+  <!-- Player command receipts are opt-in and remain generic; player/grid details stay in game. -->
+  <MirrorPlayerCommandResults>false</MirrorPlayerCommandResults>
+  <!-- Copy-ready local command presets; they are never executed automatically. -->
+  <SavedCommandReferences>
+    <SavedCommandReference>
+      <Name>OwnerHealth</Name>
+      <Command>!cleanerplusadmin webhook resource health --title &quot;Cleaner Health&quot;</Command>
+    </SavedCommandReference>
+    <SavedCommandReference>
+      <Name>DryScan</Name>
+      <Command>!cleanerplusadmin webhook resource scan --fresh --count 10</Command>
+    </SavedCommandReference>
+  </SavedCommandReferences>
 
   <!-- ===================== SCHEDULED DIGEST ===================== -->
   <Digest_Enabled>false</Digest_Enabled>
@@ -266,7 +282,9 @@
   <History_Enabled>true</History_Enabled>
   <History_RetainDays>30</History_RetainDays>
   <Metrics_Enabled>false</Metrics_Enabled>
+  <!-- One persistent editable Discord operations message. Requires EnableAuditWebhook + AuditWebhookUrl. -->
   <Dashboard_Enabled>false</Dashboard_Enabled>
+  <!-- Refresh interval; use !cleanerplusadmin dashboard now for an immediate update. -->
   <Dashboard_IntervalMinutes>30</Dashboard_IntervalMinutes>
 
   <!-- ===================== PERSISTENT AGE + OWNER HELP + CLAIM (v1.4.0) ===================== -->
