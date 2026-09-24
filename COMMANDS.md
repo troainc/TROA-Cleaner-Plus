@@ -79,4 +79,4 @@ Webhook dashboards and resource reports intentionally exclude player names, grid
 
 ## Source policy
 
-This public repository contains operator documentation and configuration examples only. Cleaner+ implementation source and internal frameworks are maintained in TROA's private repository and are not published here.
+This public repository is limited to operator documentation and configuration examples.
