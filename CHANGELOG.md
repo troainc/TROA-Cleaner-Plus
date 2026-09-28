@@ -1,3 +1,7 @@
+# Unreleased
+
+- **Upcoming safe asteroid cleanup:** planned preview and optional scheduled/manual cleanup for old, named asteroid voxel maps. It will be disabled by default; permanent removal will require a separate opt-in and `GlobalDryRun=false`. Planets, global encounter asteroids, unknown maps, and asteroids near players or grids will be excluded. Voxel removal has no Cleaner+ backup or undo path. This feature is not included in the current v1.7.0 package; validate in a disposable world before production use when a supporting build is available.
+
 # v1.7.0 - Persistent Discord operations dashboard
 
 - **One editable dashboard message:** `Dashboard_Enabled` now creates a single Discord operations embed, then updates it in place instead of posting a new health message every interval.

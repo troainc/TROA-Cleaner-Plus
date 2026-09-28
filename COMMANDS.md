@@ -37,7 +37,7 @@ This is the operator-facing reference for v1.7.0. Commands use Torch chat syntax
 | `!cleanerplusadmin lifecycle status` | Show graduated-abandonment status. |
 | `!cleanerplusadmin stow status` | Show TROA-Hangar auto-stow availability. |
 
-Modules: `floatingobjects`, `grids`, `corpses`, `respawnships`, and `npcgrids`.
+Modules in v1.7.0: `floatingobjects`, `grids`, `corpses`, `respawnships`, and `npcgrids`. Asteroid commands are planned for a future plugin build and are not available in v1.7.0. When supported, enable scanning with `!cleanerplusadmin on asteroids`, preview with `!cleanerplus scan asteroids`, and separately opt in to permanent deletion with `!cleanerplusadmin asteroids delete on`. Asteroids have no backup or undo path.
 
 ## Restore and restart operations
 
