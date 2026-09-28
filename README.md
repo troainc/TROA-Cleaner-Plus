@@ -18,7 +18,7 @@ it keep the world clean without downtime.
 
 ### Unreleased development note
 
-Asteroid cleanup is documented below as an upcoming feature. It is **not included in the current v1.7.0 package**; the settings and commands require a future Cleaner+ build that includes the asteroid module.
+Asteroid cleanup is documented below for **v1.8.0**. The v1.8.0 package has been built locally but is not published as a public release asset; the currently listed public package remains v1.7.0. The settings and commands require the v1.8.0 plugin build.
 
 ## The TROA grid keep policy
 
@@ -61,9 +61,9 @@ keep a grid regardless of the policy.
 | Floating objects | `floatingobjects` | on | Dropped ore/component stacks older than `FloatingObjects_MaxAgeMinutes`, optionally sparing large stacks and objects near players. |
 | Grids | `grids` | on | Grids that fail the keep policy, plus (optionally) ownerless grids and grids with no functional blocks. Static grids are excluded unless enabled. Connected subgrids are treated as one unit. |
 | Dead characters | `corpses` | off | Dead character bodies older than `Corpses_MaxAgeMinutes`. |
-| Asteroids *(upcoming)* | `asteroids` | off | Planned whole-asteroid cleanup for named voxel maps observed for at least 30 days and outside player/grid safety distances. Planets, global encounter asteroids, unknown maps, and maps near players or grids are excluded. Removal will be permanent, with no backup or undo. Not available in v1.7.0. |
+| Asteroids *(v1.8.0)* | `asteroids` | off | Whole-asteroid cleanup for named voxel maps observed for at least 30 days and outside player/grid safety distances. Planets, global encounter asteroids, unknown maps, and maps near players or grids are excluded. Removal is permanent, with no backup or undo. Not available in v1.7.0. |
 
-When released, asteroid cleanup will require `Asteroids_Enabled=true` to scan and a separate `Asteroids_AllowPermanentDeletion=true` opt-in (or `!cleanerplusadmin asteroids delete on`) before deletion. `GlobalDryRun` must also be off. The defaults will be 30 days observed age, 10 km from online players, and 5 km from grids, measured from full bounds. Asteroid voxels cannot use Cleaner+'s grid backup, restore, or undo systems; test in a disposable world before enabling permanent removal.
+Asteroid cleanup requires `Asteroids_Enabled=true` to scan and a separate `Asteroids_AllowPermanentDeletion=true` opt-in (or `!cleanerplusadmin asteroids delete on`) before deletion. `GlobalDryRun` must also be off. Defaults are 30 days observed age, 10 km from online players, and 5 km from grids, measured from full bounds. Asteroid voxels cannot use Cleaner+'s grid backup, restore, or undo systems; test in a disposable world before enabling permanent removal.
 
 ## v1.1.0 features
 
@@ -195,7 +195,7 @@ When released, asteroid cleanup will require `Asteroids_Enabled=true` to scan an
 | `!cleanerplusadmin restart now [min] [full\|soft]` | Arm a restart (soft reload or full). |
 | `!cleanerplusadmin restart cancel \| delay <min> \| skip \| status \| boot` | Manage the armed restart / last boot report. |
 
-Modules in v1.7.0 are `floatingobjects`, `grids`, and `corpses`. Asteroid commands are planned for a future plugin build and are not available in v1.7.0. When supported, enable scanning with `!cleanerplusadmin on asteroids`, preview with `!cleanerplus scan asteroids`, and separately opt in to permanent deletion with `!cleanerplusadmin asteroids delete on`. Asteroids have no backup or undo path.
+Modules in v1.7.0 are `floatingobjects`, `grids`, and `corpses`. For v1.8.0, enable asteroid scanning with `!cleanerplusadmin on asteroids`, preview with `!cleanerplus scan asteroids`, and separately opt in to permanent deletion with `!cleanerplusadmin asteroids delete on`. These commands require the v1.8.0 plugin build, which is not yet available as a public package. Asteroids have no backup or undo path.
 
 ## Install
 
@@ -275,11 +275,11 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `Corpses_Mode` | `Interval` | `Interval`, `RealTime`, or `CommandOnly`. |
 | `Corpses_IntervalMinutes` | `20` | Interval-mode period. |
 | `Corpses_MaxAgeMinutes` | `30` | Minimum age before a dead body is removed. |
-| `Asteroids_Enabled` | `false` | Upcoming feature: enable asteroid scanning in a build that supports it. |
-| `Asteroids_AllowPermanentDeletion` | `false` | Upcoming feature: separate opt-in required for permanent voxel removal, in addition to `GlobalDryRun=false`. |
-| `Asteroids_Mode` / `Asteroids_IntervalMinutes` | `Interval` / `1440` | Upcoming feature: scheduled run mode and interval; `CommandOnly` disables scheduled scans. |
-| `Asteroids_MinAgeDays` | `30` | Upcoming feature: minimum time observed by Cleaner+ before an asteroid qualifies. |
-| `Asteroids_MinDistanceFromPlayers` / `Asteroids_MinDistanceFromGrids` | `10000` / `5000` | Upcoming feature: minimum meters from online players and grids, measured from full bounds. |
+| `Asteroids_Enabled` | `false` | v1.8.0: enable asteroid scanning and scheduling. |
+| `Asteroids_AllowPermanentDeletion` | `false` | v1.8.0: separate opt-in required for permanent voxel removal, in addition to `GlobalDryRun=false`. |
+| `Asteroids_Mode` / `Asteroids_IntervalMinutes` | `Interval` / `1440` | v1.8.0: scheduled run mode and interval; `CommandOnly` disables scheduled scans. |
+| `Asteroids_MinAgeDays` | `30` | v1.8.0: minimum time observed by Cleaner+ before an asteroid qualifies. |
+| `Asteroids_MinDistanceFromPlayers` / `Asteroids_MinDistanceFromGrids` | `10000` / `5000` | v1.8.0: minimum meters from online players and grids, measured from full bounds. |
 | `Grids_TreatConnectedAsGroup` | `true` | Treat connected subgrids as one unit for policy + backup. |
 | `PolicyOverrides` | empty | Per-faction / per-zone overrides of block min, beacon, interval, enable. |
 | `EnableAuditWebhook` | `false` | Enable Discord audit embeds. |

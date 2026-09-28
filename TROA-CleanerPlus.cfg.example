@@ -142,9 +142,8 @@
   <Corpses_IntervalMinutes>20</Corpses_IntervalMinutes>
   <Corpses_MaxAgeMinutes>30</Corpses_MaxAgeMinutes>
 
-  <!-- UPCOMING FEATURE: asteroid cleanup is not supported by the current v1.7.0 package.
-       These settings are for a future build containing the asteroid module. Whole asteroid voxel
-       deletion is permanent and has no backup/undo path. -->
+  <!-- v1.8.0 settings: the current public v1.7.0 package does not recognize the asteroid module.
+       Whole asteroid voxel deletion is permanent and has no backup/undo path. -->
   <Asteroids_Enabled>false</Asteroids_Enabled>
   <Asteroids_AllowPermanentDeletion>false</Asteroids_AllowPermanentDeletion>
   <Asteroids_Mode>Interval</Asteroids_Mode>
