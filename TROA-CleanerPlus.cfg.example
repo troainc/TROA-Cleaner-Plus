@@ -142,8 +142,11 @@
   <Corpses_IntervalMinutes>20</Corpses_IntervalMinutes>
   <Corpses_MaxAgeMinutes>30</Corpses_MaxAgeMinutes>
 
-  <!-- v1.8.0 settings: the current public v1.7.0 package does not recognize the asteroid module.
-       Whole asteroid voxel deletion is permanent and has no backup/undo path. -->
+  <!-- ===================== ASTEROID VOXEL CLEANUP (permanent, off by default) =====================
+       Whole MyVoxelMap asteroids only; planets and global encounter asteroids are excluded.
+       No backup/restore or undo exists. Keep both opt-ins off until dry-run output is reviewed.
+       Age means time Cleaner+ has observed the asteroid (persisted when PersistGridAge is enabled).
+       Proximity is measured from the asteroid's full bounds. -->
   <Asteroids_Enabled>false</Asteroids_Enabled>
   <Asteroids_AllowPermanentDeletion>false</Asteroids_AllowPermanentDeletion>
   <Asteroids_Mode>Interval</Asteroids_Mode>

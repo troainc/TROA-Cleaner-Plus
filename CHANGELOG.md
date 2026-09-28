@@ -2,6 +2,8 @@
 
 This changelog documents the locally prepared v1.8.0 package. The package is not published as a public release asset.
 
+The full public config example now matches the current v1.8.0 configuration schema. The listed v1.7.0 package does not recognize the asteroid settings.
+
 - **Safe asteroid cleanup:** adds previewable, optional scheduled/manual cleanup for old, named asteroid voxel maps. Disabled by default; permanent removal requires a separate opt-in and `GlobalDryRun=false`. Planets, global encounter asteroids, unknown maps, and asteroids near players or grids are excluded. Voxel removal has no Cleaner+ backup or undo path. Validate in a disposable world before production use.
 
 # v1.7.0 - Persistent Discord operations dashboard

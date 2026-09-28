@@ -223,8 +223,7 @@ is **skipped and logged** rather than deleted.
 
 ## Configuration reference
 
-The live file is `TROA-CleanerPlus.cfg`. An annotated `TROA-CleanerPlus.cfg.example` ships with the
-plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
+The live file is `TROA-CleanerPlus.cfg`. The full current config template is `TROA-CleanerPlus.cfg.example`. For v1.8.0 asteroid settings, use the v1.8.0 plugin build; the listed public v1.7.0 package does not recognize those settings. All settings are re-read on save or `!cleanerplusadmin reload`.
 
 | Setting | Default | Purpose |
 |---|---:|---|
