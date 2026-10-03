@@ -126,3 +126,7 @@ All new features are off by default except owner warnings and history. 54 unit t
 - Added restart-free configuration: safe reload with `!cleanerplusadmin reload` and an automatic config-file save watcher.
 - Added moderator commands (`!cleanerplus help|status|policy|scan`) and admin commands (`!cleanerplusadmin now|on|off|mode|interval|dryrun|master|reload`).
 - Added a deterministic, dependency-free test harness for the name policy and configuration logic.
+
+## Documentation update - 2026-10-03
+
+- Added a documentation landing page linking installation, safety policy, commands, configuration, backups, and release-specific feature status.

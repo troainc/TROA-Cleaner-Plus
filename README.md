@@ -378,3 +378,7 @@ If a grid was removed, it is recoverable — check Gridvault+ (`!gridvault find 
 
 Report issues with the Cleaner+ version, Torch version, Space Engineers version, host OS, the command
 used, and the relevant `Cleanup.log` excerpt. Do not include private server data in public reports.
+
+## Documentation
+
+See [`docs/README.md`](docs/README.md) for the safe setup order, version-specific config guidance, commands, and recovery documentation.
