@@ -1,3 +1,9 @@
+## Public operator documentation expansion - 2026-10-06
+
+- Added a detailed user guide under docs/USER_GUIDE.md and linked it from the documentation index and root README.
+- Documented current setup, feature ownership, command/config references, operational workflows, safety boundaries, and version/status limitations using the published behavior.
+- Added repository-local context, contribution instructions, and a dated documentation log entry. No private source or credentials are included.
+
 # v1.8.0 - Safe asteroid cleanup
 
 This changelog documents the locally prepared v1.8.0 package. The package is not published as a public release asset.
@@ -130,3 +136,8 @@ All new features are off by default except owner warnings and history. 54 unit t
 ## Documentation update - 2026-10-03
 
 - Added a documentation landing page linking installation, safety policy, commands, configuration, backups, and release-specific feature status.
+## Documentation correction - 2026-10-06
+
+- Added a public roadmap with the published v1.7.0 boundary, the unreleased v1.8.0 asteroid gate, and recovery priorities.
+- Clarified that Admin Overseer owns the save-confirmed restart workflow; Cleaner+'s legacy restarter remains off by default pending a release-gated retirement.
+

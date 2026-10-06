@@ -20,6 +20,10 @@ it keep the world clean without downtime.
 
 Asteroid cleanup is documented below for **v1.8.0**. The v1.8.0 package has been built locally but is not published as a public release asset; the currently listed public package remains v1.7.0. The settings and commands require the v1.8.0 plugin build.
 
+### Restart ownership
+
+The v1.7.0 package includes an optional legacy Cleaner+ restarter, disabled by default. Admin Overseer owns the current save-confirmed administrative restart workflow; use `!ova restart` for server restarts and do not enable both restart authorities. Removing Cleaner+'s duplicate restart execution is a follow-up release item. See the [roadmap](ROADMAP.md).
+
 ## The TROA grid keep policy
 
 On TROA, a grid is **kept** only when it satisfies **all** of these:
@@ -382,3 +386,9 @@ used, and the relevant `Cleanup.log` excerpt. Do not include private server data
 ## Documentation
 
 See [`docs/README.md`](docs/README.md) for the safe setup order, version-specific config guidance, commands, and recovery documentation.
+
+
+## Documentation
+
+Use the [documentation index](docs/README.md) and [detailed operator guide](docs/USER_GUIDE.md) for setup, everyday use, feature behavior, and troubleshooting. Check the changelog and the current release before applying version-specific instructions.
+

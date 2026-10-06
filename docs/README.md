@@ -8,3 +8,8 @@ Cleaner+ is a configurable Torch plugin for scheduled or manual world cleanup. I
 - Check the changelog and current release asset before using settings introduced after the published package. For example, the README explicitly separates v1.8.0 asteroid cleanup from the currently published v1.7.0 package.
 
 Keep dry-run and backup safeguards enabled while evaluating cleanup rules. Confirm feature availability against the installed version; a public sample config can contain settings for a later build.
+
+## Start here
+
+Read the [detailed user and operator guide](USER_GUIDE.md) for supported setup, feature workflows, safe operation, and troubleshooting.
+
