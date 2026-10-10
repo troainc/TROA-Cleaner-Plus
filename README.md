@@ -1,3 +1,5 @@
+> **Bifrost Plugin Panel:** In a compatible Admin Overseer release, open **Plugin systems → Open workspace** for TROA Cleaner+. The [connection guide](docs/BIFROST-PLUGIN-PANEL.md) covers webserver setup, IPv4/domain access, accounts, permissions, and troubleshooting. Metrics and controls depend on what this installed plugin build actually exposes.
+
 # TROA Cleaner+
 
 TROA Cleaner+ is a headless, fully toggleable, **restart-free** automated cleanup plugin for Space
