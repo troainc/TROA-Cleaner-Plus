@@ -1,10 +1,9 @@
-## Unreleased — Profiler+ isolation reports (candidate for Cleaner+ v1.10.0)
+# v1.10.0 - Profiler+ isolation reports and recoverable quarantine
 
-- Profiler+ can forward up to three estimated grid suspects during an active low-SimSpeed incident. Scores are investigative correlations, not proof of cause; Profiler+ does not alter the world.
-- Cleaner+ is planned to persist an isolation report with evidence and a five-minute administrator review window. Admins can inspect reports, approve quarantine immediately, or dismiss them; an unanswered report may quarantine eligible grids when the window expires.
-- Before quarantine, Cleaner+ saves every connected-grid member under `TROA-CleanerPlusData/Profiler Quarantine/<incident-id>/`. Failed snapshots leave the grids untouched. The candidate restore command is `!cleanerplusadmin profiler restore <incident-id>`.
-- The planned workflow respects Cleaner+ master-off, global dry-run, static/NPC/grace/proximity rules, and hard grid protections; it does not call Gridvault+ or Hangar deletion flows. No physics-freeze action is included.
-- This is unreleased candidate behavior. It is not part of the currently listed public package; publish a validated package before treating these commands or behavior as available.
+- Profiler+ forwards up to three estimated grid suspects during an active low-SimSpeed incident. Scores are investigative correlations, not proof of cause; Profiler+ does not alter the world.
+- Cleaner+ persists an isolation report with evidence and a five-minute administrator review window. Admins can inspect reports, approve quarantine immediately, or dismiss them; an unanswered report quarantines eligible suspects when the window expires.
+- Before quarantine, Cleaner+ saves every connected-grid member under `TROA-CleanerPlusData/Profiler Quarantine/<incident-id>/`. Failed snapshots leave the grids untouched. Restore snapshots with `!cleanerplusadmin profiler restore <incident-id>`.
+- Quarantine respects Cleaner+ master-off, global dry-run, static/NPC/grace/proximity rules, and hard grid protections; it does not call Gridvault+ or Hangar deletion flows. No physics-freeze action is included.
 
 ## 2026-10-09 — Bifrost Plugin Panel operator guide
 
