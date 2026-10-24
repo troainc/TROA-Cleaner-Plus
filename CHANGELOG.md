@@ -1,3 +1,10 @@
+## Unreleased development — SimSpeed response
+
+- Candidate source changes check the live engine SimSpeed before using the configured Profiler+ metrics file as a fallback, and report the source to administrators.
+- Candidate monitoring checks about every five seconds, alerts after 30 seconds below `0.90`, marks readings below `0.65` critical, and reports recovery after three readings at or above `0.93`.
+- Chat broadcasts are configurable. Monitoring does not enable cleanup, concealment, or restart. Existing emergency-concealment eligibility protections remain in place; release and runtime validation are pending.
+- These candidate changes are not included in the currently published v1.7.0 ZIP.
+
 # v1.10.0 - Profiler+ isolation reports and recoverable quarantine
 
 - Profiler+ forwards up to three estimated grid suspects during an active low-SimSpeed incident. Scores are investigative correlations, not proof of cause; Profiler+ does not alter the world.
