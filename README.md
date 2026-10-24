@@ -11,22 +11,26 @@ it keep the world clean without downtime.
 
 ## Current Release
 
-- Version: `v1.7.0`
-- Package: `TROA-CleanerPlus-v1.7.0.zip`
-- SHA-256: `B251FD13E46E0498405BC73A4FD7A36D0FF979896901176FB5669426CA58FF7D`
+- Version: `v1.10.0`
+- Package: `TROA-CleanerPlus-v1.10.0.zip`
+- SHA-256: `70BDC378AAEADFBF2B1AE23E90D42F3B8F16EB679324436C1730CD36A3AA5FF8`
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
 
+### Security fixes
+
+The current published Cleaner+ package includes the security fixes released for this plugin. Keep installations on the latest approved package; older packages do not include fixes added in later releases. [Open the Cleaner+ releases](https://github.com/troainc/TROA-Cleaner-Plus/releases) to identify the current package and its version-specific notes.
+
 ### Unreleased development note
 
-Cleaner+ has candidate SimSpeed monitoring changes under development: it checks live engine speed first, alerts after 30 seconds below `0.90`, marks readings below `0.65` critical, and reports recovery after three readings at or above `0.93`. These changes do not enable cleanup, concealment, or restart. They are not in the published v1.7.0 package and still require build and Torch test-server validation; see the [changelog](CHANGELOG.md).
+Cleaner+ has candidate SimSpeed monitoring changes under development: it checks live engine speed first, alerts after 30 seconds below `0.90`, marks readings below `0.65` critical, and reports recovery after three readings at or above `0.93`. These changes do not enable cleanup, concealment, or restart. They are not in the published v1.10.0 package and still require build and Torch test-server validation; see the [changelog](CHANGELOG.md).
 
-Asteroid cleanup is documented below for **v1.8.0**. The v1.8.0 package has been built locally but is not published as a public release asset; the currently listed public package remains v1.7.0. The settings and commands require the v1.8.0 plugin build.
+Asteroid cleanup is documented below for **v1.8.0**. That feature is included in later packages, including the published v1.10.0 release. The settings and commands require a build that includes v1.8.0 or later.
 
 ### Restart ownership
 
-The v1.7.0 package includes an optional legacy Cleaner+ restarter, disabled by default. Admin Overseer owns the current save-confirmed administrative restart workflow; use `!ova restart` for server restarts and do not enable both restart authorities. Removing Cleaner+'s duplicate restart execution is a follow-up release item. See the [roadmap](ROADMAP.md).
+The v1.10.0 package includes an optional legacy Cleaner+ restarter, disabled by default. Admin Overseer owns the current save-confirmed administrative restart workflow; use `!ova restart` for server restarts and do not enable both restart authorities. Removing Cleaner+'s duplicate restart execution is a follow-up release item. See the [roadmap](ROADMAP.md).
 
 ## The TROA grid keep policy
 
