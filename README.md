@@ -24,7 +24,7 @@ The current published Cleaner+ package includes the security fixes released for 
 
 ### Unreleased development note
 
-Cleaner+ has candidate SimSpeed monitoring changes under development: it checks live engine speed first, alerts after 30 seconds below `0.90`, marks readings below `0.65` critical, and reports recovery after three readings at or above `0.93`. These changes do not enable cleanup, concealment, or restart. They are not in the published v1.10.0 package and still require build and Torch test-server validation; see the [changelog](CHANGELOG.md).
+Cleaner+ has a v1.11.0 SimSpeed candidate ZIP in [`releases/TROA-CleanerPlus-v1.11.0.zip`](releases/TROA-CleanerPlus-v1.11.0.zip). It checks live engine speed first, alerts after 30 seconds below `0.90`, marks readings below `0.65` critical, and reports recovery after three readings at or above `0.93`. These changes do not enable cleanup, concealment, or restart. The latest tagged GitHub release is still v1.10.0; live Torch test-server validation is pending before promotion. See the [changelog](CHANGELOG.md).
 
 Asteroid cleanup is documented below for **v1.8.0**. That feature is included in later packages, including the published v1.10.0 release. The settings and commands require a build that includes v1.8.0 or later.
 
