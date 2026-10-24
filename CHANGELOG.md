@@ -1,50 +1,37 @@
-## v1.11.0 candidate — SimSpeed response (ZIP available; test-server validation pending)
+# TROA Cleaner+ Changelog
 
-- Candidate source changes check the live engine SimSpeed before using the configured Profiler+ metrics file as a fallback, and report the source to administrators.
-- Candidate monitoring checks about every five seconds, alerts after 30 seconds below `0.90`, marks readings below `0.65` critical, and reports recovery after three readings at or above `0.93`.
-- Chat broadcasts are configurable. Monitoring does not enable cleanup, concealment, or restart. Existing emergency-concealment eligibility protections remain in place; release and runtime validation are pending.
-- The candidate ZIP is in `releases/`. Live Torch test-server validation is still required before tagging a release.
+## v1.11.1 — candidate, not yet released
 
-# v1.10.0 - Profiler+ isolation reports and recoverable quarantine
+- Adds independent sustained SimSpeed alerts with defaults of `0.90` low, `0.65` critical, and `0.93` recovery.
+- Reports engine or metrics-file reading source; failed readings remain unavailable.
+- Adds configurable in-game broadcast and optional Discord alert delivery. Monitoring does not enable cleanup, concealment, or restart actions.
+- Build completed for v1.11.1; live Torch test-server validation is still required before release.
 
-- Profiler+ forwards up to three estimated grid suspects during an active low-SimSpeed incident. Scores are investigative correlations, not proof of cause; Profiler+ does not alter the world.
-- Cleaner+ persists an isolation report with evidence and a five-minute administrator review window. Admins can inspect reports, approve quarantine immediately, or dismiss them; an unanswered report quarantines eligible suspects when the window expires.
-- Before quarantine, Cleaner+ saves every connected-grid member under `TROA-CleanerPlusData/Profiler Quarantine/<incident-id>/`. Failed snapshots leave the grids untouched. Restore snapshots with `!cleanerplusadmin profiler restore <incident-id>`.
-- Quarantine respects Cleaner+ master-off, global dry-run, static/NPC/grace/proximity rules, and hard grid protections; it does not call Gridvault+ or Hangar deletion flows. No physics-freeze action is included.
+## Documentation maintenance — 2026-10-23
 
-## 2026-10-09 — Bifrost Plugin Panel operator guide
+- Reorganized the README around current operation, modules, safety, and configuration instead of leaving release-specific feature notes scattered through the usage guide.
+- Documented the current SimSpeed input source and the distinct behavior of adaptive scheduling, emergency concealment, and performance-triggered restarts. These are documentation updates; runtime defaults and behavior are unchanged.
+- Corrected the module inventory to include asteroids, respawn ships, and NPC grids alongside floating objects, grids, and corpses.
+- Corrected the README release status: source/changelog contain the v1.8.0 asteroid feature, while manifest, project, assembly, and latest checked-in package remain v1.7.0.
 
-- Adds connection steps in the README and a detailed operator guide for opening this plugin’s workspace, permissions, settings, commands, and troubleshooting.
-- Describes expected plugin-owned views only when the installed build exposes real data or safe controls. Documentation only; no runtime adapter or behavior change is claimed.
+## v1.8.0 — Safe asteroid cleanup
 
-## Public operator documentation expansion - 2026-10-06
+- **Safe asteroid cleanup module:** adds previewable, optional scheduled/manual cleanup for old `MyVoxelMap` asteroids. Disabled by default; permanent removal additionally requires a separate opt-in and `GlobalDryRun=false`. Planets, global encounter asteroids, unknown maps, and asteroids near players or grids are excluded. Asteroids cannot be backed up or undone by Cleaner+; verify in a disposable world before use.
 
-- Added a detailed user guide under docs/USER_GUIDE.md and linked it from the documentation index and root README.
-- Documented current setup, feature ownership, command/config references, operational workflows, safety boundaries, and version/status limitations using the published behavior.
-- Added repository-local context, contribution instructions, and a dated documentation log entry. No private source or credentials are included.
-
-# v1.8.0 - Safe asteroid cleanup
-
-This changelog documents the locally prepared v1.8.0 package. The package is not published as a public release asset.
-
-The full public config example now matches the current v1.8.0 configuration schema. The listed v1.7.0 package does not recognize the asteroid settings.
-
-- **Safe asteroid cleanup:** adds previewable, optional scheduled/manual cleanup for old, named asteroid voxel maps. Disabled by default; permanent removal requires a separate opt-in and `GlobalDryRun=false`. Planets, global encounter asteroids, unknown maps, and asteroids near players or grids are excluded. Voxel removal has no Cleaner+ backup or undo path. Validate in a disposable world before production use.
-
-# v1.7.0 - Persistent Discord operations dashboard
+## v1.7.0 - Persistent Discord operations dashboard
 
 - **One editable dashboard message:** `Dashboard_Enabled` now creates a single Discord operations embed, then updates it in place instead of posting a new health message every interval.
 - **Operator controls:** `!cleanerplusadmin dashboard status|now|reset` reports dashboard state, forces an immediate update, or clears the local message link so the next update creates a replacement.
 - **Service coverage:** the dashboard reports aggregate master/dry-run state, SimSpeed, cleanup candidates, concealment, quota flags, restart/watchdog state, webhook health, and module activity.
 - **Safe local state:** `TROA-CleanerPlusData/OperationsDashboard.state` retains only Discord's numeric message ID. Webhook URLs, player identities, grid identities, IDs, positions, backups, and credentials are not included.
-# v1.6.0 - Owner operations webhooks and command presets
+## v1.6.0 - Owner operations webhooks and command presets
 
 - **Mixed command webhook delivery:** every command can emit a safe Discord audit receipt when enabled; player receipts and explicitly routed restore/ownership/GPS administrator output are independently opt-in.
 - **Sanitized resource webhooks:** `!cleanerplusadmin webhook resource` supports `status`, `scan`, `health`, `quota`, `conceal`, `schedule`, `restart`, and `modules`, plus trailing `--count`, `--title`, `--note`, and `--fresh` options.
 - **Saved command presets:** bounded local `command save|list|show|remove` references help operators reuse standard health and cleanup workflows without automatic command execution.
 - **Privacy boundary:** detailed resource panels intentionally omit player names, grid names, IDs, Steam IDs, GPS coordinates, backup paths, and webhook credentials.
 
-# v1.5.0 - Restarter, boost fast-restart, and startup watchdog
+## v1.5.0 - Restarter, boost fast-restart, and startup watchdog
 
 - **Restarter** (`Restart_Enabled`, off by default): scheduled (`RestartSchedule` HH:mm + days),
   interval (`Restart_EveryHours`), performance (low sim for N min / `Restart_MaxMemoryMb`), uptime
@@ -67,7 +54,7 @@ The full public config example now matches the current v1.8.0 configuration sche
 - Built on verified Torch API (`ITorchServer.Restart`, `Torch.Save`/`SaveResult`, `GameStateChanged`,
   `UnloadSession`/`LoadSession`). Everything is off by default and dry-run testable (`Restart_DryRun`).
 
-# v1.4.0 - Lifecycle, Hangar stow, Respawn/NPC cleanup, persistent age, claim
+## v1.4.0 - Lifecycle, Hangar stow, Respawn/NPC cleanup, persistent age, claim
 
 - **Graduated abandonment lifecycle** (`Lifecycle_Enabled`, owned grids): instead of instant deletion,
   a flagged grid is warned (+GPS) -> depowered (reactors/thrusters/tools off) -> disposed (stow or
@@ -87,7 +74,7 @@ The full public config example now matches the current v1.8.0 configuration sche
 - **Bugfix**: content-defaulted config lists (WarningLeadSeconds, DefaultGridNamePatterns, respawn/NPC
   lists) no longer double on load (XmlSerializer append behavior); now filled only when empty.
 
-# v1.3.0 - Backlog: keep-alive action, PCU rules, safe-zone protect, localization, CI
+## v1.3.0 - Backlog: keep-alive action, PCU rules, safe-zone protect, localization, CI
 
 - **PB / Remote-Control keep-alive action** — a `Cleaner+ Keep Alive` terminal action on Programmable Blocks and Remote Controls holds a grid hot (exempt from concealment) for `Conceal_KeepAliveMinutes` (`Conceal_KeepAliveAction`).
 - **PCU keep rule** — `RequirePcuToKeep` + `MinPcuToKeep`: a grid under the PCU minimum fails the keep policy (shown as "under N PCU" in `!cleanerplus scan`). Also honored per-zone/faction.
@@ -97,7 +84,7 @@ The full public config example now matches the current v1.8.0 configuration sche
 - **CI workflow** — `.github/workflows/build-and-release.yml` builds on push and, on a `v*` tag, publishes the plugin zip to the public release repo (needs `TORCH_BINARIES_TOKEN` + `PUBLIC_REPO_TOKEN`).
 - **Player-ready config example** — `TROA-CleanerPlus.cfg.example` rewritten with real, populated sample entries (protection lists, zones, policy overrides, scheduled events, quiet hours) using open/close tags — no more empty self-closing tags to guess at.
 
-# v1.2.0 - Self-healing performance, player-fair retention, scheduling, analytics
+## v1.2.0 - Self-healing performance, player-fair retention, scheduling, analytics
 
 Self-healing performance:
 - Adaptive intervals scale each module's cadence by server sim ratio (healthy = longer, degraded = shorter). Off by default (`Adaptive_*`).
@@ -120,7 +107,7 @@ Insight & analytics:
 
 All new features are off by default except owner warnings and history. 54 unit tests pass.
 
-# v1.1.0 - Concealment, Discord Audit, Connected Grids, Zones, Digest, Restore
+## v1.1.0 - Concealment, Discord Audit, Connected Grids, Zones, Digest, Restore
 
 - **Grid concealment (experimental, off by default):** a reversible layer between "keep active" and "delete". Idle grids far from players are removed from the simulation/update path (not deleted) to reclaim sim speed, and revealed when a player returns. Modernized from the classic TorchAPI/Concealment mechanism (component-update removal, `MyEntities.UnregisterForUpdate`, entity flags, hierarchy recursion, projector handling), with spawn-point safety (never conceals medical/cryo grids), protection/static exclusions, reveal-all on unload, and fail-closed guarding. Config: `Conceal_*`. Commands: `!cleanerplusadmin conceal now|status`, `reveal all`.
 - **Discord audit webhook with pretty embeds:** consolidated per-pass embed (removed / backed up / skipped / dry-run), a scheduled digest embed, and a concealment-effectiveness embed with a coverage progress bar. Quiet-failure circuit (3 fails → 10-min pause), ASCII-safe payloads, URL never logged. Config: `EnableAuditWebhook`, `AuditWebhookUrl`, `WebhookName`, `SendStartupWebhookTest`, `WebhookOnPass/Digest/Conceal`. Command: `!cleanerplusadmin webhook [test|reset]`.
@@ -130,14 +117,14 @@ All new features are off by default except owner warnings and history. 54 unit t
 - **Scheduled digest:** periodic "world is clean / N grids flagged" report to the log, in-game chat, and Discord. Config: `Digest_*`. Command: `!cleanerplusadmin digest now`.
 - **Local restore helper:** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]` restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
 
-# v1.0.0-alpha.2 - Fully Configurable Messaging
+## v1.0.0-alpha.2 - Fully Configurable Messaging
 
 - Made all player-facing text configurable in `TROA-CleanerPlus.cfg`: `WarningMessageTemplate`, `SummaryMessageTemplate`, `KeepHintMessage`, `RecoveryHintMessage`, and `PolicyMessageOverride`, plus `ShowKeepHintOnScan` and `ScanMaxLines`.
 - Templates support placeholders that are substituted at runtime: `{DisplayName}`, `{Module}`, `{Seconds}`, `{Count}`, `{MinBlocks}`, and `{NoCleanTag}`.
 - `!cleanerplus scan` now appends the configurable keep hint and recovery hint (toggle with `ShowKeepHintOnScan`) and honors `ScanMaxLines`; `!cleanerplus policy` uses `PolicyMessageOverride` when set, otherwise the auto-generated policy plus the configurable keep hint.
 - Interval pre-run warnings and the post-pass summary now use the configurable templates. All keep rules (beacon requirement, block minimum, rename requirement, default-name patterns, ownerless, no-functional, protection lists, GPS zones, and the no-clean tag) remain individually configurable as before.
 
-# v1.0.0-alpha.1 - First Build
+## v1.0.0-alpha.1 - First Build
 
 - Created TROA Cleaner+, a headless, toggleable, restart-free automated cleanup plugin for Torch Space Engineers servers.
 - Added three independently toggleable modules: floating objects, grids, and dead characters.
@@ -151,12 +138,3 @@ All new features are off by default except owner warnings and history. 54 unit t
 - Added restart-free configuration: safe reload with `!cleanerplusadmin reload` and an automatic config-file save watcher.
 - Added moderator commands (`!cleanerplus help|status|policy|scan`) and admin commands (`!cleanerplusadmin now|on|off|mode|interval|dryrun|master|reload`).
 - Added a deterministic, dependency-free test harness for the name policy and configuration logic.
-
-## Documentation update - 2026-10-03
-
-- Added a documentation landing page linking installation, safety policy, commands, configuration, backups, and release-specific feature status.
-## Documentation correction - 2026-10-06
-
-- Added a public roadmap with the published v1.7.0 boundary, the unreleased v1.8.0 asteroid gate, and recovery priorities.
-- Clarified that Admin Overseer owns the save-confirmed restart workflow; Cleaner+'s legacy restarter remains off by default pending a release-gated retirement.
-

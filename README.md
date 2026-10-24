@@ -1,5 +1,3 @@
-> **Bifrost Plugin Panel:** In a compatible Admin Overseer release, open **Plugin systems → Open workspace** for TROA Cleaner+. The [connection guide](docs/BIFROST-PLUGIN-PANEL.md) covers webserver setup, IPv4/domain access, accounts, permissions, and troubleshooting. Metrics and controls depend on what this installed plugin build actually exposes.
-
 # TROA Cleaner+
 
 TROA Cleaner+ is a headless, fully toggleable, **restart-free** automated cleanup plugin for Space
@@ -9,28 +7,13 @@ changed live (no server restart, no world reload), and every grid it removes is 
 It was built for hassle-free operation: turn on the sweeps you want, pick how each one runs, and let
 it keep the world clean without downtime.
 
-## Current Release
+## Current development package
 
-- Version: `v1.10.0`
-- Package: `TROA-CleanerPlus-v1.10.0.zip`
-- SHA-256: `70BDC378AAEADFBF2B1AE23E90D42F3B8F16EB679324436C1730CD36A3AA5FF8`
+- Candidate manifest, assembly, project, and package version: `v1.11.1`.
+- The current public release remains v1.10.0. The v1.11.1 candidate ZIP has been built and is pending Torch test-server validation before release; see the SimSpeed response section and changelog.
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
-
-### Security fixes
-
-The current published Cleaner+ package includes the security fixes released for this plugin. Keep installations on the latest approved package; older packages do not include fixes added in later releases. [Open the Cleaner+ releases](https://github.com/troainc/TROA-Cleaner-Plus/releases) to identify the current package and its version-specific notes.
-
-### Unreleased development note
-
-Cleaner+ has a v1.11.0 SimSpeed candidate ZIP in [`releases/TROA-CleanerPlus-v1.11.0.zip`](releases/TROA-CleanerPlus-v1.11.0.zip). It checks live engine speed first, alerts after 30 seconds below `0.90`, marks readings below `0.65` critical, and reports recovery after three readings at or above `0.93`. These changes do not enable cleanup, concealment, or restart. The latest tagged GitHub release is still v1.10.0; live Torch test-server validation is pending before promotion. See the [changelog](CHANGELOG.md).
-
-Asteroid cleanup is documented below for **v1.8.0**. That feature is included in later packages, including the published v1.10.0 release. The settings and commands require a build that includes v1.8.0 or later.
-
-### Restart ownership
-
-The v1.10.0 package includes an optional legacy Cleaner+ restarter, disabled by default. Admin Overseer owns the current save-confirmed administrative restart workflow; use `!ova restart` for server restarts and do not enable both restart authorities. Removing Cleaner+'s duplicate restart execution is a follow-up release item. See the [roadmap](ROADMAP.md).
 
 ## The TROA grid keep policy
 
@@ -66,6 +49,14 @@ keep a grid regardless of the policy.
 - **Server friendly.** Removals are batched across ticks; whole-world scans run only on the module's
   schedule, never every tick. Headless — works the same on Windows, Linux, and AMP/Wine.
 
+## SimSpeed response and current behavior
+
+Cleaner+ reads the live `MyPhysics.SimulationRatio` first and uses the configured Profiler+ metrics file only when the engine value is unavailable. `!cleanerplusadmin simspeed` reports the value and source. The v1.11.1 candidate's independent SimSpeed monitor checks every five seconds, warns after 30 seconds below 0.90, upgrades to critical below 0.65, and reports recovery after three readings at or above 0.93. Chat broadcast is configurable. SimSpeed monitoring does not enable cleanup, concealment, or restart actions; emergency concealment remains disabled by default and retains its eligibility safeguards.
+
+Low SimSpeed does not by itself start ordinary grid cleanup or restart the server. Adaptive scheduling is off by default and only adjusts module intervals. Emergency concealment is also off by default; when enabled, concealment must also be enabled, SimSpeed must remain below `Conceal_EmergencyThreshold` (default `0.60`) for three concealment cycles, and only eligible idle grids can be concealed. With the default five-minute concealment interval, checks run about every 25 seconds at 60 updates per second, so detection may take roughly 50–75 seconds after the slowdown begins. Concealment is reversible and reveals grids near players. The restart performance trigger is separately controlled by `Restart_Enabled` and `Restart_SimSpeedFloor`; the floor defaults to `0` (off).
+
+This means a drop below `0.65` does not trigger the default emergency behavior. The planned shared response uses `0.90` as the low-speed threshold, with sustained sampling, recovery hysteresis, and safeguards. See [the cross-plugin SimSpeed response plan](../SIM-SPEED-RESPONSE-PLAN.md) before changing live behavior.
+
 ## Modules
 
 | Module | Key | Default | What it removes |
@@ -73,11 +64,88 @@ keep a grid regardless of the policy.
 | Floating objects | `floatingobjects` | on | Dropped ore/component stacks older than `FloatingObjects_MaxAgeMinutes`, optionally sparing large stacks and objects near players. |
 | Grids | `grids` | on | Grids that fail the keep policy, plus (optionally) ownerless grids and grids with no functional blocks. Static grids are excluded unless enabled. Connected subgrids are treated as one unit. |
 | Dead characters | `corpses` | off | Dead character bodies older than `Corpses_MaxAgeMinutes`. |
-| Asteroids *(v1.8.0)* | `asteroids` | off | Whole-asteroid cleanup for named voxel maps observed for at least 30 days and outside player/grid safety distances. Planets, global encounter asteroids, unknown maps, and maps near players or grids are excluded. Removal is permanent, with no backup or undo. Not available in v1.7.0. |
+| Asteroids | `asteroids` | off | Whole `MyVoxelMap` asteroids observed for at least 30 days and beyond configured player/grid distances. Planets, global encounter asteroids, unknown maps, and maps near grids or online players are excluded. Removal is permanent: no backup or undo. |
+| Respawn ships | `respawnships` | off | Unclaimed default respawn ships or pods matching configured name patterns and age. |
+| NPC grids | `npcgrids` | off | Stale NPC, pirate, cargo, or encounter grids, subject to age, distance, and keep-block rules. |
 
-Asteroid cleanup requires `Asteroids_Enabled=true` to scan and a separate `Asteroids_AllowPermanentDeletion=true` opt-in (or `!cleanerplusadmin asteroids delete on`) before deletion. `GlobalDryRun` must also be off. Defaults are 30 days observed age, 10 km from online players, and 5 km from grids, measured from full bounds. Asteroid voxels cannot use Cleaner+'s grid backup, restore, or undo systems; test in a disposable world before enabling permanent removal.
+Asteroid cleanup has two independent controls: set `Asteroids_Enabled=true` to scan, and explicitly enable permanent deletion with `Asteroids_AllowPermanentDeletion=true` (or `!cleanerplusadmin asteroids delete on`). `GlobalDryRun` must also be false before anything is removed. Start with `!cleanerplus scan asteroids` and review the dry-run logs. The 30-day clock is time observed by Cleaner+; keep `PersistGridAge=true` if it should survive plugin restarts. Distance checks cover the asteroid's full bounds (10 km from players and 5 km from grids by default). Asteroids are not protected by the grid backup, restore, or undo systems; validate deletion in a disposable test world first.
 
-## v1.1.0 features
+## Release feature history
+
+The sections below summarize features by release. The changelog keeps the full version history and fix details.
+
+### v1.8.0 — Safe asteroid cleanup
+
+- **Whole asteroid voxel maps only.** The off-by-default `asteroids` module excludes planets, global encounter asteroids, unknown maps, and asteroids near online players or grids. It requires 30 days observed age, with full-bounds clearances of 10 km from players and 5 km from grids by default.
+- **Permanent removal has two gates.** `Asteroids_AllowPermanentDeletion` must be explicitly enabled and `GlobalDryRun` must be off; the module itself must also be enabled. Voxel asteroids have no grid backup, restore, or undo path. Validate in a disposable Torch world before production use.
+
+### v1.7.0 — Persistent operations dashboard
+
+- **Persistent operations dashboard.** With `Dashboard_Enabled=true`, Cleaner+ creates one Discord embed and edits that same message at `Dashboard_IntervalMinutes`. It shows aggregate master/dry-run state, SimSpeed, cleanup candidates, module activity, quota flags, concealment, restart/watchdog state, and webhook health. Use `!cleanerplusadmin dashboard status`, `dashboard now`, or `dashboard reset`; the local dashboard state stores only the Discord message ID, never the webhook URL.
+
+### v1.6.0 — Owner operations and command presets
+
+- **Mixed command delivery.** Set `EnableCommandWebhookMirror=true` (or run `!cleanerplusadmin webhook mirror on`) to create a Discord audit receipt for every Cleaner+ command while preserving full command text locally. Player command receipts stay off unless `MirrorPlayerCommandResults=true`. Restore, ownership, Steam-ID, and GPS administrator details require the separate `AllowSensitiveCommandWebhookMirror=true` opt-in.
+- **Detailed owner resource panels.** `!cleanerplusadmin webhook resource <status|scan|health|quota|conceal|schedule|restart|modules> [--count N] [--title "text"] [--note "text"] [--fresh]` queues an aggregate, privacy-safe Discord embed. It reports service health, cleanup candidate totals, quota counts, concealment coverage, schedules, restart configuration, and module activity without player names, grid names, IDs, GPS, backup paths, or webhook credentials.
+- **Reusable command presets.** `!cleanerplusadmin command save|list|show|remove` stores up to 25 bounded, copy-ready Cleaner+ lines in the local configuration. Presets are never automatically executed, so Torch permission checks still apply when an operator reuses one.
+
+### v1.5.0 — Restarter, boost, and startup watchdog
+
+- **Automated restarter** (`Restart_Enabled`) — scheduled / interval / performance / uptime /
+  empty-server / manual triggers, with broadcast + Discord countdowns.
+- **Three execution modes** (`Restart_Mode`): `TorchNative`, `ProcessExit` (AMP/Wine), `ExternalCommand`.
+- **Faster boots** — a pre-shutdown **trim + verified save** shrinks the world so the next load is
+  quicker; a **boot-readiness report** logs how long boots take.
+- **Boost / tiered restart** (`Restart_BoostEnabled`) — fast in-process **soft reload** for frequent
+  restarts, a **full** process restart every `Restart_FullEveryNth` to clear memory, plus mod-cache
+  prewarm and instant plugin-state resume. *(A plugin can't keep the loaded world in RAM across a full
+  process restart; speed comes from soft-reload + a smaller saved world.)*
+- **Startup watchdog** (`Startup_WatchdogEnabled`) — auto-recovers a boot that hangs past the timeout.
+- Commands: `!cleanerplusadmin restart now [min] [full|soft] | cancel | delay <min> | skip | status | boot`.
+- Everything off by default and testable with `Restart_DryRun`.
+
+### v1.4.0 — Lifecycle and additional grid modules
+
+- **Graduated abandonment lifecycle** (`Lifecycle_Enabled`) — owned grids go warn(+GPS) -> depower ->
+  dispose on timers instead of instant deletion; state persists. `!cleanerplusadmin lifecycle status`.
+- **TROA-Hangar auto-stow** (`Stow_Enabled`) — move an owned grid into its owner's hangar instead of
+  deleting (falls back to backup+delete when TROA-Hanger is absent). `!cleanerplusadmin stow status`.
+- **Respawn-ship module** (`respawnships`) — remove unclaimed default respawn ships/pods.
+- **NPC-grid module** (`npcgrids`) — remove stale NPC/pirate/cargo/encounter grids, sparing trade
+  stations (Store/SafeZone).
+- **Persistent grid age** (`PersistGridAge`) — grace/idle/offline stay accurate across restarts.
+- **Owner GPS markers** (`Warn_SendGps`) + **claim** (`!cleaner claim <grid>` for nearby ownerless grids).
+
+### v1.3.0 — Keep rules and localization
+
+- **PB / Remote-Control keep-alive** — a `Cleaner+ Keep Alive` terminal action on Programmable Blocks
+  and Remote Controls holds a grid hot (exempt from concealment) for `Conceal_KeepAliveMinutes`.
+- **PCU keep rule** — `RequirePcuToKeep` + `MinPcuToKeep` add PCU as a first-class keep requirement.
+- **Safe-zone auto-protect** — `Protect_SafeZoneGrids` protects any grid with a Safe Zone block.
+- **Localization packs** — `LocaleFile` points at a `key=value` file to translate all player messages
+  (`docs/locales/en.lang` + a German sample ship in the repo).
+- **Concealment reveal-on-spawn** — `Conceal_RevealOnSpawn` lets medbay/cryo grids be concealed and
+  reveals them when a player logs in/spawns.
+- **CI** — `.github/workflows/build-and-release.yml` builds and publishes releases on a `v*` tag.
+- **Player-ready config example** — every list in `TROA-CleanerPlus.cfg.example` now shows real,
+  editable sample entries instead of empty tags.
+
+### v1.2.0 — Adaptive scheduling and player-fair retention
+
+- **Self-healing performance.** Adaptive intervals scale by server sim ratio; emergency concealment
+  kicks in on sustained lag; antenna keep-alive spares grids of online owners. Sim readings come from
+  the engine or a TROA Profiler+ metrics file (`ProfilerMetricsFile`). `!cleanerplusadmin simspeed`.
+- **Player-fair retention.** Owners are warned before their grid is cleaned (chat/Discord, with a
+  lead + on-login grace); players self-serve with `!cleaner mygrids / risk / keep / request`; and
+  per-player grid/PCU quotas can warn and trim (`Quota_*`).
+- **Admin control & scheduling.** Scheduled cleanup events (`ScheduledEvents`), quiet-hours
+  suppression (`QuietHours`), `!cleanerplusadmin undo`, and a restore-request workflow
+  (`requests` / `approve` / `deny`).
+- **Insight & analytics.** Per-pass sim-speed delta, rolling `History/*.csv`, clean-reason +
+  top-offender breakdown in the digest, Prometheus/JSON metrics export for Grafana
+  (`Metrics_Enabled`), and one editable Discord operations dashboard (`Dashboard_Enabled`).
+
+### v1.1.0 — Concealment, Discord audit, and restore
 
 - **Grid concealment (experimental, off by default).** A reversible layer between "keep active" and
   "delete": idle grids far from players are removed from the simulation/update path (not deleted) to
@@ -98,68 +166,6 @@ Asteroid cleanup requires `Asteroids_Enabled=true` to scan and a separate `Aster
   (`Digest_*`; `!cleanerplusadmin digest now`).
 - **Local restore helper.** `!cleanerplusadmin restore list [steamid]` and `restore <gridId> [x y z]`
   restore from Cleaner+'s own Cleanup Grids folder when Gridvault+ is not installed.
-
-## v1.7.0 features — persistent operations dashboard and owner webhooks
-
-- **Mixed command delivery.** Set `EnableCommandWebhookMirror=true` (or run `!cleanerplusadmin webhook mirror on`) to create a Discord audit receipt for every Cleaner+ command while preserving full command text locally. Player command receipts stay off unless `MirrorPlayerCommandResults=true`. Restore, ownership, Steam-ID, and GPS administrator details require the separate `AllowSensitiveCommandWebhookMirror=true` opt-in.
-- **Persistent operations dashboard.** With `Dashboard_Enabled=true`, Cleaner+ creates one Discord embed and edits that same message at `Dashboard_IntervalMinutes`. It shows aggregate master/dry-run state, SimSpeed, cleanup candidates, module activity, quota flags, concealment, restart/watchdog state, and webhook health. Use `!cleanerplusadmin dashboard status`, `dashboard now`, or `dashboard reset`; the local dashboard state stores only the Discord message ID, never the webhook URL.
-- **Detailed owner resource panels.** `!cleanerplusadmin webhook resource <status|scan|health|quota|conceal|schedule|restart|modules> [--count N] [--title "text"] [--note "text"] [--fresh]` queues an aggregate, privacy-safe Discord embed. It reports service health, cleanup candidate totals, quota counts, concealment coverage, schedules, restart configuration, and module activity without player names, grid names, IDs, GPS, backup paths, or webhook credentials.
-- **Reusable command presets.** `!cleanerplusadmin command save|list|show|remove` stores up to 25 bounded, copy-ready Cleaner+ lines in the local configuration. Presets are never automatically executed, so Torch permission checks still apply when an operator reuses one.
-## v1.5.0 features — Restarter + boost + startup watchdog
-
-- **Automated restarter** (`Restart_Enabled`) — scheduled / interval / performance / uptime /
-  empty-server / manual triggers, with broadcast + Discord countdowns.
-- **Three execution modes** (`Restart_Mode`): `TorchNative`, `ProcessExit` (AMP/Wine), `ExternalCommand`.
-- **Faster boots** — a pre-shutdown **trim + verified save** shrinks the world so the next load is
-  quicker; a **boot-readiness report** logs how long boots take.
-- **Boost / tiered restart** (`Restart_BoostEnabled`) — fast in-process **soft reload** for frequent
-  restarts, a **full** process restart every `Restart_FullEveryNth` to clear memory, plus mod-cache
-  prewarm and instant plugin-state resume. *(A plugin can't keep the loaded world in RAM across a full
-  process restart; speed comes from soft-reload + a smaller saved world.)*
-- **Startup watchdog** (`Startup_WatchdogEnabled`) — auto-recovers a boot that hangs past the timeout.
-- Commands: `!cleanerplusadmin restart now [min] [full|soft] | cancel | delay <min> | skip | status | boot`.
-- Everything off by default and testable with `Restart_DryRun`.
-
-## v1.4.0 features
-
-- **Graduated abandonment lifecycle** (`Lifecycle_Enabled`) — owned grids go warn(+GPS) -> depower ->
-  dispose on timers instead of instant deletion; state persists. `!cleanerplusadmin lifecycle status`.
-- **TROA-Hangar auto-stow** (`Stow_Enabled`) — move an owned grid into its owner's hangar instead of
-  deleting (falls back to backup+delete when TROA-Hanger is absent). `!cleanerplusadmin stow status`.
-- **Respawn-ship module** (`respawnships`) — remove unclaimed default respawn ships/pods.
-- **NPC-grid module** (`npcgrids`) — remove stale NPC/pirate/cargo/encounter grids, sparing trade
-  stations (Store/SafeZone).
-- **Persistent grid age** (`PersistGridAge`) — grace/idle/offline stay accurate across restarts.
-- **Owner GPS markers** (`Warn_SendGps`) + **claim** (`!cleaner claim <grid>` for nearby ownerless grids).
-
-## v1.3.0 features
-
-- **PB / Remote-Control keep-alive** — a `Cleaner+ Keep Alive` terminal action on Programmable Blocks
-  and Remote Controls holds a grid hot (exempt from concealment) for `Conceal_KeepAliveMinutes`.
-- **PCU keep rule** — `RequirePcuToKeep` + `MinPcuToKeep` add PCU as a first-class keep requirement.
-- **Safe-zone auto-protect** — `Protect_SafeZoneGrids` protects any grid with a Safe Zone block.
-- **Localization packs** — `LocaleFile` points at a `key=value` file to translate all player messages
-  (`docs/locales/en.lang` + a German sample ship in the repo).
-- **Concealment reveal-on-spawn** — `Conceal_RevealOnSpawn` lets medbay/cryo grids be concealed and
-  reveals them when a player logs in/spawns.
-- **CI** — `.github/workflows/build-and-release.yml` builds and publishes releases on a `v*` tag.
-- **Player-ready config example** — every list in `TROA-CleanerPlus.cfg.example` now shows real,
-  editable sample entries instead of empty tags.
-
-## v1.2.0 features
-
-- **Self-healing performance.** Adaptive intervals scale by server sim ratio; emergency concealment
-  kicks in on sustained lag; antenna keep-alive spares grids of online owners. Sim readings come from
-  the engine or a TROA Profiler+ metrics file (`ProfilerMetricsFile`). `!cleanerplusadmin simspeed`.
-- **Player-fair retention.** Owners are warned before their grid is cleaned (chat/Discord, with a
-  lead + on-login grace); players self-serve with `!cleaner mygrids / risk / keep / request`; and
-  per-player grid/PCU quotas can warn and trim (`Quota_*`).
-- **Admin control & scheduling.** Scheduled cleanup events (`ScheduledEvents`), quiet-hours
-  suppression (`QuietHours`), `!cleanerplusadmin undo`, and a restore-request workflow
-  (`requests` / `approve` / `deny`).
-- **Insight & analytics.** Per-pass sim-speed delta, rolling `History/*.csv`, clean-reason +
-  top-offender breakdown in the digest, Prometheus/JSON metrics export for Grafana
-  (`Metrics_Enabled`), and one editable Discord operations dashboard (`Dashboard_Enabled`).
 
 ## Commands
 
@@ -207,7 +213,7 @@ Asteroid cleanup requires `Asteroids_Enabled=true` to scan and a separate `Aster
 | `!cleanerplusadmin restart now [min] [full\|soft]` | Arm a restart (soft reload or full). |
 | `!cleanerplusadmin restart cancel \| delay <min> \| skip \| status \| boot` | Manage the armed restart / last boot report. |
 
-Modules in v1.7.0 are `floatingobjects`, `grids`, and `corpses`. For v1.8.0, enable asteroid scanning with `!cleanerplusadmin on asteroids`, preview with `!cleanerplus scan asteroids`, and separately opt in to permanent deletion with `!cleanerplusadmin asteroids delete on`. These commands require the v1.8.0 plugin build, which is not yet available as a public package. Asteroids have no backup or undo path.
+Modules are `floatingobjects`, `grids`, `corpses`, `asteroids`, `respawnships`, and `npcgrids`. Optional concealment, lifecycle, quota, and restart systems are separate services rather than cleanup modules.
 
 ## Install
 
@@ -235,7 +241,8 @@ is **skipped and logged** rather than deleted.
 
 ## Configuration reference
 
-The live file is `TROA-CleanerPlus.cfg`. The full current config template is `TROA-CleanerPlus.cfg.example`. For v1.8.0 asteroid settings, use the v1.8.0 plugin build; the listed public v1.7.0 package does not recognize those settings. All settings are re-read on save or `!cleanerplusadmin reload`.
+The live file is `TROA-CleanerPlus.cfg`. An annotated `TROA-CleanerPlus.cfg.example` ships with the
+plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 
 | Setting | Default | Purpose |
 |---|---:|---|
@@ -286,11 +293,11 @@ The live file is `TROA-CleanerPlus.cfg`. The full current config template is `TR
 | `Corpses_Mode` | `Interval` | `Interval`, `RealTime`, or `CommandOnly`. |
 | `Corpses_IntervalMinutes` | `20` | Interval-mode period. |
 | `Corpses_MaxAgeMinutes` | `30` | Minimum age before a dead body is removed. |
-| `Asteroids_Enabled` | `false` | v1.8.0: enable asteroid scanning and scheduling. |
-| `Asteroids_AllowPermanentDeletion` | `false` | v1.8.0: separate opt-in required for permanent voxel removal, in addition to `GlobalDryRun=false`. |
-| `Asteroids_Mode` / `Asteroids_IntervalMinutes` | `Interval` / `1440` | v1.8.0: scheduled run mode and interval; `CommandOnly` disables scheduled scans. |
-| `Asteroids_MinAgeDays` | `30` | v1.8.0: minimum time observed by Cleaner+ before an asteroid qualifies. |
-| `Asteroids_MinDistanceFromPlayers` / `Asteroids_MinDistanceFromGrids` | `10000` / `5000` | v1.8.0: minimum meters from online players and grids, measured from full bounds. |
+| `Asteroids_Enabled` | `false` | Enable asteroid scanning and scheduling. |
+| `Asteroids_AllowPermanentDeletion` | `false` | Separate opt-in required for irreversible voxel removal, in addition to `GlobalDryRun=false`. |
+| `Asteroids_Mode` / `Asteroids_IntervalMinutes` | `Interval` / `1440` | Scheduled run mode and interval; `CommandOnly` disables scheduled scans. |
+| `Asteroids_MinAgeDays` | `30` | Minimum time observed by Cleaner+ before a whole asteroid qualifies. |
+| `Asteroids_MinDistanceFromPlayers` / `Asteroids_MinDistanceFromGrids` | `10000` / `5000` | Minimum meters from online players and grids, measured from full bounds. |
 | `Grids_TreatConnectedAsGroup` | `true` | Treat connected subgrids as one unit for policy + backup. |
 | `PolicyOverrides` | empty | Per-faction / per-zone overrides of block min, beacon, interval, enable. |
 | `EnableAuditWebhook` | `false` | Enable Discord audit embeds. |
@@ -390,13 +397,3 @@ If a grid was removed, it is recoverable — check Gridvault+ (`!gridvault find 
 
 Report issues with the Cleaner+ version, Torch version, Space Engineers version, host OS, the command
 used, and the relevant `Cleanup.log` excerpt. Do not include private server data in public reports.
-
-## Documentation
-
-See [`docs/README.md`](docs/README.md) for the safe setup order, version-specific config guidance, commands, and recovery documentation.
-
-
-## Documentation
-
-Use the [documentation index](docs/README.md) and [detailed operator guide](docs/USER_GUIDE.md) for setup, everyday use, feature behavior, and troubleshooting. Check the changelog and the current release before applying version-specific instructions.
-
