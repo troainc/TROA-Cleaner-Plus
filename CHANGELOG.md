@@ -1,9 +1,9 @@
-## Unreleased development — SimSpeed response
+## v1.11.0 candidate — SimSpeed response (ZIP available; test-server validation pending)
 
 - Candidate source changes check the live engine SimSpeed before using the configured Profiler+ metrics file as a fallback, and report the source to administrators.
 - Candidate monitoring checks about every five seconds, alerts after 30 seconds below `0.90`, marks readings below `0.65` critical, and reports recovery after three readings at or above `0.93`.
 - Chat broadcasts are configurable. Monitoring does not enable cleanup, concealment, or restart. Existing emergency-concealment eligibility protections remain in place; release and runtime validation are pending.
-- These candidate changes are not included in the currently published v1.10.0 ZIP.
+- The candidate ZIP is in `releases/`. Live Torch test-server validation is still required before tagging a release.
 
 # v1.10.0 - Profiler+ isolation reports and recoverable quarantine
 
