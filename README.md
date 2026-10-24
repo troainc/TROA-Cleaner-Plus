@@ -20,6 +20,8 @@ it keep the world clean without downtime.
 
 ### Unreleased development note
 
+Cleaner+ has candidate SimSpeed monitoring changes under development: it checks live engine speed first, alerts after 30 seconds below `0.90`, marks readings below `0.65` critical, and reports recovery after three readings at or above `0.93`. These changes do not enable cleanup, concealment, or restart. They are not in the published v1.7.0 package and still require build and Torch test-server validation; see the [changelog](CHANGELOG.md).
+
 Asteroid cleanup is documented below for **v1.8.0**. The v1.8.0 package has been built locally but is not published as a public release asset; the currently listed public package remains v1.7.0. The settings and commands require the v1.8.0 plugin build.
 
 ### Restart ownership
