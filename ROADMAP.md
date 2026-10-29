@@ -2,22 +2,21 @@
 
 Cleaner+ owns cleanup policy, cleanup schedules, preservation before deletion, and cleanup reporting. Admin Overseer owns the administrative save-confirmed restart workflow. Monitor+ only transports authorized commands and does not own either feature.
 
-## Current public release
+## Release status
 
-The published package remains v1.7.0. Its legacy optional restarter is disabled by default, but remains present in that package. For server restarts, use Admin Overseer's `!ova restart` workflow. Retirement of Cleaner+'s duplicate restart execution is a release-gated follow-up; do not enable both restart authorities.
+The latest published binary is v1.10.0. v1.12.0 through v1.12.4 are documented candidates; candidate docs do not mean those packages are published. Cleaner+ owns cleanup; Admin Overseer owns the save-confirmed restart workflow. Do not enable both restart authorities in builds where Cleaner+'s legacy restarter is still present.
 
-Asteroid removal described in the README is a v1.8.0 development candidate and is not part of the published v1.7.0 package.
+The v1.12.3+ asteroid behavior is irreversible and bypasses global dry-run; its release gate requires clear operator documentation and owner validation before public binary publication.
 
 ## Priorities
 
-1. Close the v1.8 asteroid safety and disposable-world acceptance gates before publication. Keep permanent deletion disabled by default and require explicit owner opt-in.
+1. Complete v1.12.4 manual command, dry-run, and asteroid safety acceptance on an owner-controlled test server before publication.
 2. Add a read-only policy simulator that lists candidates, rule outcomes, protection reasons, and whether recovery is available.
-3. Retire duplicate restart execution in a future Cleaner+ release while preserving cleanup schedules and backup-before-delete behavior.
-4. Validate backup/restore recovery when GridVault+ is missing, unavailable, or on an incompatible API version.
+3. Validate backup/restore recovery when GridVault+ is missing, unavailable, or on an incompatible API version.
 
 These priorities are not release promises. See [CHANGELOG.md](CHANGELOG.md) for published behavior.
 
 
-## 2026-10-28 stability candidate
+## Candidate history
 
-v1.12.0 is available under releases/ with version-specific notes. Live server validation is pending.
+v1.12.0 is available under releases/ with version-specific notes. v1.12.4 is the latest documented candidate; its named package remains local until owner validation and publication.

@@ -17,7 +17,7 @@ For screenshots, webserver options, account setup, and the full Panel guide, see
 
 ## What operators can expect here
 
-The workspace can present Cleaner+-reported cleanup activity such as scan/cleanup counts, removed, backed-up, skipped, or concealed grids, queue state, and simulation trends when that installed build publishes the measurements. Cleanup switches, dry-run, schedules, backup requirements, and destructive actions remain Cleaner+ owned. Keep dry-run on while learning the rules; use Cleaner+ commands/configuration for any control the Panel marks read-only or unavailable.
+The workspace can present Cleaner+-reported cleanup activity such as scan/cleanup counts, removed, backed-up, skipped, or concealed grids, queue state, and simulation trends when that installed build publishes the measurements. Cleanup switches, dry-run, schedules, backup requirements, and destructive actions remain Cleaner+ owned. Keep dry-run on while learning the rules; use Cleaner+ commands/configuration for any control the Panel marks read-only or unavailable. In the v1.12.3+ candidate, asteroid/boulder removal is permanent and bypasses global dry-run; inspect the Cleaner+ preview before enabling or manually running it.
 
 The exact cards depend on the plugin build and the data it reports. The Panel uses actual plugin-provided values and timestamps; it should label missing or old data as unavailable/stale rather than inventing readings. A chart only contains the history retained and exposed by the plugin.
 

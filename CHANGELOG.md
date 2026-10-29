@@ -1,12 +1,21 @@
 # TROA Cleaner+ Changelog
 
+## v1.12.4 candidate — manual cleanup controls and safety (2026-10-29; not published)
+
+Version-specific notes: [v1.12.4 candidate notes](releases/v1.12.4.md).
+
+- Documents the exact preview, targeted cleanup, and all-enabled-module commands; distinguishes automatic recovery sweeps from a manual deep cleanup.
+- Manual `!cleanerplusadmin now <module>` requires the Cleaner+ master switch and requested module to be enabled. Disabled modules are rejected with instructions instead of running as a manual override.
+- Clarifies that ordinary modules honor global dry-run, while asteroid/boulder voxel deletion does not; preview with `!cleanerplus scan asteroids` and disable asteroids before `now all` if they should be excluded.
+- Release artifact name: `TROA-CleanerPlus-v1.12.4-Manual-Cleanup-Safety.zip`. The package is a local candidate and has not been published as a GitHub binary release or validated in-game.
+
 ## v1.12.3 candidate — asteroid cleanup and Overseer restart handoff (2026-10-29; not published)
 
 - Restores scheduled whole-voxel cleanup for storage names beginning `Asteroid_` and, by default, `Boulder-`; scans after world load and every 120 minutes. Planets and unrecognized voxel storage remain excluded.
 - Protects asteroid/boulder maps whose full bounds are within the configurable default 5,000 m of any live grid. The same check runs immediately before removal, protecting asteroid-built player bases. Set `Asteroids_MinDistanceFromGrids` to `0` to disable the clearance.
 - Asteroid/boulder removal is permanent and has no backup or undo. It intentionally ignores global dry-run and age/player-distance gates; disable the module with `Asteroids_Enabled=false` or `!cleanerplusadmin off asteroids`.
-- Cleaner+ automatic restart defaults are disabled. Cleaner+ exposes a pre-restart cleanup handoff; private Admin Overseer v0.8.93 requests cleanup, waits for the explicit drained sentinel after enabled module scans and removal queues finish, then verifies a save, announces its 60-second countdown, and calls Torch's restart API. Cleanup remains Cleaner+ owned; restart timing remains Overseer owned. The v0.8.93 package is in the private main checkout. Linux/Wine AMP supervision and live behavior remain unverified.
-- Release build succeeded with zero errors and five existing warnings. The v1.12.3 ZIP is in the private source repository's `releases/` folder; this public entry documents a candidate, not a published release.
+- Cleaner+ automatic restart defaults are disabled. Cleaner+ exposes a pre-restart cleanup handoff; the matching Admin Overseer candidate requests cleanup, waits for the explicit drained sentinel after enabled module scans and removal queues finish, then verifies a save, announces its 60-second countdown, and calls Torch's restart API. Cleanup remains Cleaner+ owned; restart timing remains Overseer owned. Linux/Wine AMP supervision and live behavior remain unverified.
+- The v1.12.3 and matching Overseer packages are candidates, not published binary releases. Live validation remains pending.
 
 ## v1.12.0 - stability recovery candidate (2026-10-28)
 

@@ -9,17 +9,17 @@ it keep the world clean without downtime.
 
 ## Current development package
 
-- Candidate manifest, assembly, project, and package version: `v1.12.0`.
-- The current public release remains v1.10.0. The v1.12.0 candidate ZIP has been built and is pending Torch test-server validation before release; see the SimSpeed response section and changelog.
+- Latest documented candidate manifest, assembly, project, and package version: `v1.12.4`.
+- The latest published binary remains v1.10.0. v1.12.4 is not a public binary release; its candidate artifact is named `TROA-CleanerPlus-v1.12.4-Manual-Cleanup-Safety.zip`. See the [v1.12.4 candidate notes](releases/v1.12.4.md), manual cleanup section, and changelog.
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
 
-## New stability package: v1.12.0
+## Previous stability candidate: v1.12.0
 
-[Download TROA-CleanerPlus-v1.12.0.zip](releases/TROA-CleanerPlus-v1.12.0.zip) | [Release notes and configuration](releases/v1.12.0.md) | [Checksum](releases/TROA-CleanerPlus-v1.12.0.zip.sha256)
+[Version-specific notes](releases/v1.12.0.md) | [Checksum file](releases/TROA-CleanerPlus-v1.12.0.zip.sha256)
 
-Adds elapsed-time recovery response, protected optional trash recovery sweeps, bounded cleanup scheduling, and concealment/reveal fixes. Build completed; live server testing is pending. Start with `!cleanerplusadmin recovery status` after installing the package.
+This older candidate adds elapsed-time recovery response, protected optional trash recovery sweeps, bounded cleanup scheduling, and concealment/reveal fixes. It is not the latest candidate; check the installed DLL version before relying on newer command behavior. Its package archive is an older candidate and is not represented as the latest published release.
 
 ## The TROA grid keep policy
 
@@ -50,18 +50,37 @@ keep a grid regardless of the policy.
   Grids" vault through its bridge API. No Gridvault+? Cleaner+ writes to its **own** local
   "Cleanup Grids" folder instead. A grid that cannot be backed up is **skipped, never deleted**
   (`RequireGridvaultBackupBeforeDelete`, default on).
-- **Safe by default.** Dry-run ships **on** — nothing is deleted until you turn it off. Newly built
-  grids are protected by a grace period. Pre-run warnings are broadcast to players.
+- **Dry-run ships on for ordinary modules.** Newly built grids are protected by a grace period and
+  pre-run warnings are broadcast to players. The v1.12.3+ asteroid candidate is a separate
+  permanent-removal path that bypasses global dry-run; review its preview and warning first.
 - **Server friendly.** Removals are batched across ticks; whole-world scans run only on the module's
   schedule, never every tick. Headless — works the same on Windows, Linux, and AMP/Wine.
 
 ## SimSpeed response and current behavior
 
-Cleaner+ reads the live `MyPhysics.SimulationRatio` first and uses the configured Profiler+ metrics file only when the engine value is unavailable. `!cleanerplusadmin simspeed` reports the value and source. The v1.11.1 candidate's independent SimSpeed monitor checks every five seconds, warns after 30 seconds below 0.90, upgrades to critical below 0.65, and reports recovery after three readings at or above 0.93. Chat broadcast is configurable. SimSpeed monitoring does not enable cleanup, concealment, or restart actions; emergency concealment remains disabled by default and retains its eligibility safeguards.
+Cleaner+ reads the live `MyPhysics.SimulationRatio` first and uses the configured Profiler+ metrics file only when the engine value is unavailable. `!cleanerplusadmin simspeed` reports the value and source. In the v1.12.4 candidate, the independent monitor checks every five seconds, warns after 30 seconds below 0.90, upgrades to critical below 0.65, and reports recovery after one valid reading at or above 0.93. Chat broadcast is configurable. SimSpeed monitoring does not enable cleanup, concealment, or restart actions; emergency concealment remains disabled by default and retains its eligibility safeguards.
 
 Low SimSpeed does not by itself start ordinary grid cleanup or restart the server. Adaptive scheduling is off by default and only adjusts module intervals. Emergency concealment is also off by default; when enabled, concealment must also be enabled, SimSpeed must remain below `Conceal_EmergencyThreshold` (default `0.60`) for three concealment cycles, and only eligible idle grids can be concealed. With the default five-minute concealment interval, checks run about every 25 seconds at 60 updates per second, so detection may take roughly 50–75 seconds after the slowdown begins. Concealment is reversible and reveals grids near players. The restart performance trigger is separately controlled by `Restart_Enabled` and `Restart_SimSpeedFloor`; the floor defaults to `0` (off).
 
 This means a drop below `0.65` does not trigger the default emergency behavior. The planned shared response uses `0.90` as the low-speed threshold, with sustained sampling, recovery hysteresis, and safeguards. See [the cross-plugin SimSpeed response plan](../SIM-SPEED-RESPONSE-PLAN.md) before changing live behavior.
+
+## Manual cleanup commands (v1.12.4 candidate)
+
+First check status and preview each target. Scans are read-only and list candidates that qualify now:
+
+```text
+!cleanerplus status
+!cleanerplus scan floatingobjects
+!cleanerplus scan corpses
+!cleanerplus scan grids
+!cleanerplus scan respawnships
+!cleanerplus scan npcgrids
+!cleanerplus scan asteroids
+```
+
+For ordinary cleanup, `!cleanerplusadmin now <module>` queues a targeted pass on the next update. The Cleaner+ master switch and that module must both be ON. With global dry-run ON, ordinary modules report candidates without deleting. `!cleanerplusadmin now all` queues all enabled modules.
+
+**Asteroid exception:** asteroid/boulder removal is permanent, has no backup or undo, and ignores global dry-run. Review `!cleanerplus scan asteroids` first. Run `!cleanerplusadmin off asteroids` before `!cleanerplusadmin now all` if you do not intend to include voxel removal. The separate `!cleanerplusadmin recovery status|on|off` feature only manages automatic eligible floating-object and corpse sweeps during sustained low SimSpeed; it is not a general deep-clean command.
 
 ## Modules
 
@@ -70,17 +89,17 @@ This means a drop below `0.65` does not trigger the default emergency behavior. 
 | Floating objects | `floatingobjects` | on | Dropped ore/component stacks older than `FloatingObjects_MaxAgeMinutes`, optionally sparing large stacks and objects near players. |
 | Grids | `grids` | on | Grids that fail the keep policy, plus (optionally) ownerless grids and grids with no functional blocks. Static grids are excluded unless enabled. Connected subgrids are treated as one unit. |
 | Dead characters | `corpses` | off | Dead character bodies older than `Corpses_MaxAgeMinutes`. |
-| Asteroids | `asteroids` | off | Whole `MyVoxelMap` asteroids observed for at least 30 days and beyond configured player/grid distances. Planets, global encounter asteroids, unknown maps, and maps near grids or online players are excluded. Removal is permanent: no backup or undo. |
+| Asteroids (v1.12.3+ candidate) | `asteroids` | on | Whole voxel maps named with the `Asteroid_` prefix and, by default, `Boulder-`; maps whose full bounds are within the configured clearance of a live grid are kept. No age, player-distance, or dry-run gate. Removal is permanent: no backup or undo. |
 | Respawn ships | `respawnships` | off | Unclaimed default respawn ships or pods matching configured name patterns and age. |
 | NPC grids | `npcgrids` | off | Stale NPC, pirate, cargo, or encounter grids, subject to age, distance, and keep-block rules. |
 
-Asteroid cleanup has two independent controls: set `Asteroids_Enabled=true` to scan, and explicitly enable permanent deletion with `Asteroids_AllowPermanentDeletion=true` (or `!cleanerplusadmin asteroids delete on`). `GlobalDryRun` must also be false before anything is removed. Start with `!cleanerplus scan asteroids` and review the dry-run logs. The 30-day clock is time observed by Cleaner+; keep `PersistGridAge=true` if it should survive plugin restarts. Distance checks cover the asteroid's full bounds (10 km from players and 5 km from grids by default). Asteroids are not protected by the grid backup, restore, or undo systems; validate deletion in a disposable test world first.
+In the v1.12.3+ candidate, asteroid cleanup starts after world load and repeats every 120 minutes by default. It removes recognized `Asteroid_` maps and optionally `Boulder-` maps if their full bounds are more than the configured clearance from every live grid (5 km default). It has no age, player-distance, or global dry-run gate. Disable it with `!cleanerplusadmin off asteroids`; preview with `!cleanerplus scan asteroids`. Planets and unknown storage names are excluded. Voxel removal has no backup or undo. These candidate settings do not describe the older published package; check the installed version.
 
 ## Release feature history
 
 The sections below summarize features by release. The changelog keeps the full version history and fix details.
 
-### v1.8.0 — Safe asteroid cleanup
+### v1.8.0 — Safe asteroid cleanup (historical behavior; superseded in the v1.12.3+ candidate)
 
 - **Whole asteroid voxel maps only.** The off-by-default `asteroids` module excludes planets, global encounter asteroids, unknown maps, and asteroids near online players or grids. It requires 30 days observed age, with full-bounds clearances of 10 km from players and 5 km from grids by default.
 - **Permanent removal has two gates.** `Asteroids_AllowPermanentDeletion` must be explicitly enabled and `GlobalDryRun` must be off; the module itself must also be enabled. Voxel asteroids have no grid backup, restore, or undo path. Validate in a disposable Torch world before production use.
@@ -187,14 +206,14 @@ The sections below summarize features by release. The changelog keeps the full v
 | `!cleaner request <grid>` | Ask staff to restore a cleaned grid (local fallback). |
 | `!cleanerplus status` | Shows the master switch, dry-run state, Gridvault+ link state, and each module's mode/interval/removed totals. |
 | `!cleanerplus policy` | Explains the current grid keep policy. |
-| `!cleanerplus scan [module]` | Previews exactly what would be cleaned right now, with the reason each entity failed. **Never deletes.** |
+| `!cleanerplus scan [module]` | Preview-only candidate listing. **Never deletes.** |
 
 ### Administrators
 
 | Command | Use |
 |---|---|
 | `!cleanerplusadmin help` | Lists admin commands. |
-| `!cleanerplusadmin now [module\|all]` | Runs a cleanup pass immediately (respects dry-run). |
+| `!cleanerplusadmin now [module\|all]` | Queues a manual pass. Master and requested module must be ON. Ordinary modules honor dry-run; asteroid/boulder deletion bypasses it and is permanent. |
 | `!cleanerplusadmin on <module>` / `off <module>` | Toggles a module live. |
 | `!cleanerplusadmin mode <module> <interval\|realtime\|command>` | Changes a module's run mode live. |
 | `!cleanerplusadmin interval <module> <minutes>` | Changes a module's interval live. |
@@ -223,11 +242,11 @@ Modules are `floatingobjects`, `grids`, `corpses`, `asteroids`, `respawnships`, 
 
 ## Install
 
-1. Download the newest `TROA-CleanerPlus-v*.zip` from this repository's releases.
+1. Download the newest **published** `TROA-CleanerPlus-v*.zip` release. Do not install a candidate archive based only on its version number.
 2. Install the plugin package using your host's normal Torch plugin process.
 3. Start Torch and load the world. `TROA-CleanerPlus.cfg` and the `TROA-CleanerPlusData` folder are
    created in the plugin storage path.
-4. **Dry-run is on by default.** Run `!cleanerplus scan` to preview what would be cleaned.
+4. **Dry-run is on for ordinary modules.** Run `!cleanerplus scan` to preview candidates. The v1.12.3+ asteroid candidate bypasses dry-run and can permanently delete whole voxel maps; review that module separately.
 5. Tune the config (see below), save it (auto-reloads) or run `!cleanerplusadmin reload`.
 6. When you are satisfied, set `GlobalDryRun` to `false` (or `!cleanerplusadmin dryrun off`).
 
@@ -254,7 +273,7 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 |---|---:|---|
 | `Enabled` | `true` | Master switch for the whole plugin. |
 | `DisplayName` | `Cleaner+` | Name used in chat broadcasts and logs. |
-| `GlobalDryRun` | `true` | When on, modules only report what they would remove; nothing is deleted. |
+| `GlobalDryRun` | `true` | When on, ordinary modules only report candidates. The v1.12.3+ asteroid candidate bypasses this setting and can permanently remove eligible voxel maps. |
 | `GracePeriodMinutes` | `15` | Grids/objects newer than this are never touched. |
 | `MaxRemovalsPerTick` | `2` | Removals applied per simulation tick (protects sim speed). |
 | `BroadcastWarnings` | `true` | Broadcast a countdown before each interval pass. |
@@ -299,11 +318,10 @@ plugin. All settings are re-read on save or `!cleanerplusadmin reload`.
 | `Corpses_Mode` | `Interval` | `Interval`, `RealTime`, or `CommandOnly`. |
 | `Corpses_IntervalMinutes` | `20` | Interval-mode period. |
 | `Corpses_MaxAgeMinutes` | `30` | Minimum age before a dead body is removed. |
-| `Asteroids_Enabled` | `false` | Enable asteroid scanning and scheduling. |
-| `Asteroids_AllowPermanentDeletion` | `false` | Separate opt-in required for irreversible voxel removal, in addition to `GlobalDryRun=false`. |
-| `Asteroids_Mode` / `Asteroids_IntervalMinutes` | `Interval` / `1440` | Scheduled run mode and interval; `CommandOnly` disables scheduled scans. |
-| `Asteroids_MinAgeDays` | `30` | Minimum time observed by Cleaner+ before a whole asteroid qualifies. |
-| `Asteroids_MinDistanceFromPlayers` / `Asteroids_MinDistanceFromGrids` | `10000` / `5000` | Minimum meters from online players and grids, measured from full bounds. |
+| `Asteroids_Enabled` | `true` | v1.12.3+ candidate: enable whole-voxel asteroid/boulder cleanup. Disable this module if permanent removal is not intended. |
+| `Asteroids_Mode` / `Asteroids_IntervalMinutes` | `Interval` / `120` | Candidate scheduled run mode and interval; session-load cleanup also runs while enabled. |
+| `Asteroids_IncludeBoulders` | `true` | Include storage names beginning `Boulder-`; `Asteroid_` maps are always targeted. |
+| `Asteroids_MinDistanceFromGrids` | `5000` | Protect maps whose full bounds are within this many meters of any live grid. Setting `0` disables this protection. |
 | `Grids_TreatConnectedAsGroup` | `true` | Treat connected subgrids as one unit for policy + backup. |
 | `PolicyOverrides` | empty | Per-faction / per-zone overrides of block min, beacon, interval, enable. |
 | `EnableAuditWebhook` | `false` | Enable Discord audit embeds. |
@@ -391,7 +409,7 @@ If a grid was removed, it is recoverable — check Gridvault+ (`!gridvault find 
 
 ## Safety model
 
-- Dry-run defaults on; nothing is deleted until you turn it off.
+- Dry-run defaults on for ordinary modules. The v1.12.3+ asteroid candidate bypasses it; voxel deletion is permanent and has no backup/undo.
 - Backup-before-delete; a grid that cannot be backed up is skipped.
 - Grace period spares newly built grids.
 - Whitelist, GPS zones, and the `[NOCLEAN]` tag always keep a grid.
