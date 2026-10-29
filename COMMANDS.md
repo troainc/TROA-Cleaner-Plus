@@ -1,6 +1,6 @@
 # TROA Cleaner+ Command Reference
 
-This is the operator-facing reference for v1.7.0. Commands use Torch chat syntax. Start in dry-run mode and use `!cleanerplus scan` before enabling live removal.
+This reference includes the v1.12.0 stability candidate; new recovery controls require that build. Live validation remains with the operator. Commands use Torch chat syntax. Start in dry-run mode and use `!cleanerplus scan` before enabling live removal.
 
 ## Player and moderator commands
 
@@ -38,6 +38,22 @@ This is the operator-facing reference for v1.7.0. Commands use Torch chat syntax
 | `!cleanerplusadmin stow status` | Show TROA-Hangar auto-stow availability. |
 
 Modules in v1.7.0: `floatingobjects`, `grids`, `corpses`, `respawnships`, and `npcgrids`. v1.8.0 adds asteroid commands: enable scanning with `!cleanerplusadmin on asteroids`, preview with `!cleanerplus scan asteroids`, and separately opt in to permanent deletion with `!cleanerplusadmin asteroids delete on`. These commands require the v1.8.0 plugin build, which is not yet available as a public package. Asteroids have no backup or undo path.
+
+## v1.12.0 recovery commands
+
+| Command | Purpose |
+|---|---|
+| `!cleanerplusadmin recovery status` | Show whether recovery sweeps are enabled, master/dry-run state, pending removals, and the last recovery status. |
+| `!cleanerplusadmin recovery on` | Enable automatic recovery sweeps for eligible old floating objects and dead characters from enabled automatic modules. |
+| `!cleanerplusadmin recovery off` | Disable the recovery controller; ordinary configured cleanup schedules continue. |
+| `!cleanerplus scan floatingobjects` | Preview floating-object candidates without deletion. |
+| `!cleanerplusadmin now floatingobjects` | Queue a targeted manual pass, preserving dry-run and eligibility rules; uses existing manual warning behavior. |
+| `!cleanerplusadmin dryrun on` | Preview eligible removals without deleting. |
+| `!cleanerplusadmin dryrun off` | Permit real removal under the configured cleanup policies. This applies globally, including other enabled cleanup modules. |
+
+Recovery sweeps default off. They require sustained SimSpeed below 0.90 by default and run at most once per 60 seconds. Quiet hours, age thresholds, warning/lifecycle gates and dry-run still apply. `recovery on` does not enable disabled modules, change command-only modes, turn dry-run off, or enable concealment. No grid is selected for removal solely because SimSpeed is low.
+
+In v1.12.0, immediately after toggling recovery, the final status sentence can briefly show the previous monitor state (for example, “Recovery sweeps disabled”) even when the leading toggle reads ON. A subsequent `recovery status` after the next speed check shows the updated state. Dry-run ON always means no deletion.
 
 ## Restore and restart operations
 
