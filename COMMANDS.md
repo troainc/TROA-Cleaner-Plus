@@ -1,6 +1,6 @@
 # TROA Cleaner+ Command Reference
 
-This reference covers the v1.12.4 manual-cleanup candidate and earlier public releases. v1.12.4 is not a published binary; command availability and behavior depend on the installed DLL. Commands use Torch chat syntax. Preview before any cleanup.
+This reference covers the v1.12.5 private candidate and earlier public releases. v1.12.5 is not a published binary; command availability and behavior depend on the installed DLL. Commands use Torch chat syntax. Preview before any cleanup.
 
 ## Player and moderator commands
 
@@ -21,6 +21,9 @@ This reference covers the v1.12.4 manual-cleanup candidate and earlier public re
 | Command | Purpose |
 |---|---|
 | `!cleanerplusadmin help` | Show the administrator command menu. |
+| `!cleanerplusadmin asteroidstorage status` | Show pending orphan storage cleanup state. |
+| `!cleanerplusadmin asteroidstorage scan` | Read-only scan for orphan recognized asteroid/boulder `.vx2` files in the loaded world folder. |
+| `!cleanerplusadmin asteroidstorage prune` | Queue orphan files; after cleanup drains and a save succeeds, each is checked against active voxel maps, archived under `TROACleanerPlusData/RemovedVoxelStorage`, verified, and removed from the world folder. Archives use disk space. |
 | `!cleanerplusadmin now [module\|all]` | Queue an immediate pass. In v1.12.4, Cleaner+ master and the requested module must be ON. |
 | `!cleanerplusadmin on <module>` / `off <module>` | Enable or disable a module without restart. |
 | `!cleanerplusadmin mode <module> <interval\|realtime\|command>` | Set a module execution mode. |

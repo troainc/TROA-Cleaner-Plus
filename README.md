@@ -9,7 +9,8 @@ it keep the world clean without downtime.
 
 ## Current development package
 
-- Latest documented candidate manifest, assembly, project, and package version: `v1.12.4`.
+- Latest documented private candidate manifest, assembly, project, and package version: `v1.12.5` (orphan asteroid storage cleanup; no public binary).
+- v1.12.5 adds admin scan/status/prune commands for orphan `Asteroid_` and configured `Boulder-` `.vx2` files. Pruning waits for a successful save, rechecks active voxel-map references, archives and verifies files under `TROACleanerPlusData/RemovedVoxelStorage`, then removes the world-folder copy. Archives still use disk space.
 - The latest published binary remains v1.10.0. v1.12.4 is not a public binary release; its candidate artifact is named `TROA-CleanerPlus-v1.12.4-Manual-Cleanup-Safety.zip`. See the [v1.12.4 candidate notes](releases/v1.12.4.md), manual cleanup section, and changelog.
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
@@ -213,6 +214,9 @@ The sections below summarize features by release. The changelog keeps the full v
 | Command | Use |
 |---|---|
 | `!cleanerplusadmin help` | Lists admin commands. |
+| `!cleanerplusadmin asteroidstorage status` | Show orphan voxel-storage cleanup state and pending-file count. |
+| `!cleanerplusadmin asteroidstorage scan` | Read-only scan for recognized unreferenced asteroid/boulder `.vx2` files in the loaded world folder. |
+| `!cleanerplusadmin asteroidstorage prune` | Queue recognized unreferenced files for save, active-reference check, archive, and world-folder removal. Ordinary global dry-run does not block this explicit command. |
 | `!cleanerplusadmin now [module\|all]` | Queues a manual pass. Master and requested module must be ON. Ordinary modules honor dry-run; asteroid/boulder deletion bypasses it and is permanent. |
 | `!cleanerplusadmin on <module>` / `off <module>` | Toggles a module live. |
 | `!cleanerplusadmin mode <module> <interval\|realtime\|command>` | Changes a module's run mode live. |

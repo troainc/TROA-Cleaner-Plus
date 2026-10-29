@@ -1,5 +1,12 @@
 # TROA Cleaner+ Changelog
 
+## v1.12.5 candidate — orphan asteroid storage cleanup (2026-10-29; not published)
+
+- Adds administrator `asteroidstorage status|scan|prune` commands.
+- Scans the loaded world folder for unreferenced recognized `Asteroid_` and optionally `Boulder-` `.vx2` files. Active voxel maps are excluded.
+- Before removal, waits for cleanup work to drain and a successful world save, checks live references again, archives and verifies each file under `TROACleanerPlusData/RemovedVoxelStorage`, and only then removes the world-folder copy. Archives remain recoverable and use disk space.
+- Startup discovery queues orphan storage for the same flow. Ordinary global dry-run does not block this explicit asteroid-storage pruning operation.
+
 ## v1.12.4 candidate — manual cleanup controls and safety (2026-10-29; not published)
 
 Version-specific notes: [v1.12.4 candidate notes](releases/v1.12.4.md).

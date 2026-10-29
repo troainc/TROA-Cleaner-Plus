@@ -4,7 +4,9 @@ Cleaner+ owns cleanup policy, cleanup schedules, preservation before deletion, a
 
 ## Release status
 
-The latest published binary is v1.10.0. v1.12.0 through v1.12.4 are documented candidates; candidate docs do not mean those packages are published. Cleaner+ owns cleanup; Admin Overseer owns the save-confirmed restart workflow. Do not enable both restart authorities in builds where Cleaner+'s legacy restarter is still present.
+The latest published binary is v1.10.0. v1.12.0 through v1.12.5 are documented candidates; candidate docs do not mean those packages are published. Cleaner+ owns cleanup; Admin Overseer owns the save-confirmed restart workflow. Do not enable both restart authorities in builds where Cleaner+'s legacy restarter is still present.
+
+The v1.12.5 candidate adds archival and pruning of orphan asteroid/boulder `.vx2` storage in the loaded world folder, with explicit admin scan/prune/status commands. The local candidate ZIP stays in the private repository release folder.
 
 The v1.12.3+ asteroid behavior is irreversible and bypasses global dry-run; its release gate requires clear operator documentation and owner validation before public binary publication.
 
