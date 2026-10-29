@@ -5,9 +5,9 @@ Cleaner+ is a configurable Torch plugin for scheduled or manual world cleanup. I
 - Start with [Install](../README.md#install), then read the [safety model](../README.md#safety-model) before enabling removal features.
 - Use the [command reference](../README.md#commands) and [configuration reference](../README.md#configuration-reference).
 - Review [Gridvault+ and local backups](../README.md#backups-gridvault-and-the-local-fallback).
-- Check the changelog and current release asset before using settings introduced after the published package. The latest public binary remains v1.10.0; v1.12.4 is a documented local candidate, not a published binary. Its manual cleanup and asteroid behavior are version-specific.
+- Check the changelog and current release asset before using settings introduced after the published package. The current release is v1.12.6. Consult version-specific release notes when operating older installations.
 
-Keep dry-run and backup safeguards enabled while evaluating cleanup rules. Note that the v1.12.3+ asteroid candidate bypasses global dry-run and voxel removal has no backup or undo. Confirm feature availability against the installed version; public docs and sample configs can describe a later candidate.
+Keep dry-run and backup safeguards enabled while evaluating cleanup rules. Note that the v1.12.6 asteroid cleanup bypasses global dry-run and voxel removal has no backup or undo. Confirm feature availability against the installed version; public docs and sample configs can describe a later release.
 
 ## Start here
 

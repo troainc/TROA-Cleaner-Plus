@@ -4,14 +4,15 @@ Cleaner+ is a Torch-side world maintenance plugin. Players do not install a clie
 
 ## Install and begin safely
 
-Install the package matching the version you intend to run and start once to generate the server config/data paths. Keep built-in protections and `GlobalDryRun` enabled while checking server rules. `!cleanerplus scan [module]` previews qualifying candidates and never deletes. The v1.12.4 candidate rejects manual cleanup when Cleaner+ master or the requested module is OFF. In that candidate, dry-run does not protect asteroid/boulder voxel maps. Review Torch logs before turning dry-run off. Reload changed configuration with `!cleanerplusadmin reload`; ordinary module and mode changes do not need a restart.
+Install the v1.12.6 release and start once to generate the server config/data paths. Keep built-in protections and `GlobalDryRun` enabled while checking server rules. `!cleanerplus scan [module]` previews qualifying cleanup candidates and never deletes. Manual cleanup requires Cleaner+ master and the requested module to be ON. Asteroid/boulder voxel cleanup bypasses global dry-run. Review Torch logs before turning dry-run off. Reload changed configuration with `!cleanerplusadmin reload`; ordinary module and mode changes do not need a restart.
 
 ## Cleanup families and grid keep rules
 
 - **Floating objects:** age-based cleanup with optional stack-size and player-distance protection.
 - **Grids:** policy can check Beacon presence, minimum block count, a non-default name, owner-offline age, ownerless status, and functional blocks. Static grids are excluded unless explicitly included. Mechanically connected grids can be evaluated and backed up as a group.
 - **Corpses:** optional removal after a configured age.
-- **Asteroids:** behavior is version-specific. In the v1.12.3+ candidate, recognized `Asteroid_` and optional `Boulder-` voxel maps can be removed regardless of age or global dry-run when their bounds are beyond the configured clearance from every live grid. This permanent world-data deletion has no backup/undo. Preview first with `!cleanerplus scan asteroids`; disable it with `!cleanerplusadmin off asteroids` if it must not run.
+- **Asteroids:** v1.12.6 removes recognized `Asteroid_` and optional `Boulder-` voxel maps beyond the 5 km default grid clearance and 10 km default online-player clearance, regardless of age or global dry-run. If player positions cannot be read, live-map cleanup fails closed. Voxel removal has no backup/undo. Preview with `!cleanerplus scan asteroids`; disable live asteroid cleanup with `!cleanerplusadmin off asteroids` if it must not run.
+- **Orphan asteroid storage:** `!cleanerplusadmin asteroidstorage scan` previews orphan `.vx2` files; `prune` waits for cleanup work to drain and a successful save, verifies active references and player clearance, archives and verifies a copy, then removes the world-folder file. Archived files remain recoverable under `TROACleanerPlusData/RemovedVoxelStorage` and use disk space.
 - **Concealment:** where included in the installed release, eligible idle grids may be hidden from active simulation and later revealed; it is separate from deletion.
 
 Whitelist/name protections, GPS protection zones, the `[NOCLEAN]` tag, grace periods, and configured per-zone/per-faction policy overrides can exempt grids. The specific installed release determines which of these advanced settings exist.

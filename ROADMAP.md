@@ -4,21 +4,21 @@ Cleaner+ owns cleanup policy, cleanup schedules, preservation before deletion, a
 
 ## Release status
 
-The latest published binary is v1.10.0. v1.12.0 through v1.12.5 are documented candidates; candidate docs do not mean those packages are published. Cleaner+ owns cleanup; Admin Overseer owns the save-confirmed restart workflow. Do not enable both restart authorities in builds where Cleaner+'s legacy restarter is still present.
+Current Cleaner+ release: v1.12.6. Cleaner+ owns cleanup; Admin Overseer owns the save-confirmed restart workflow. Do not enable both restart authorities in builds where Cleaner+'s legacy restarter is still present.
 
-The v1.12.5 candidate adds archival and pruning of orphan asteroid/boulder `.vx2` storage in the loaded world folder, with explicit admin scan/prune/status commands. The local candidate ZIP stays in the private repository release folder.
+The v1.12.6 release adds online-player clearance and deep orphan asteroid `.vx2` archival/pruning, gated by a successful save and active-reference checks.
 
-The v1.12.3+ asteroid behavior is irreversible and bypasses global dry-run; its release gate requires clear operator documentation and owner validation before public binary publication.
+The v1.12.6 asteroid behavior is irreversible and bypasses global dry-run; operators should review the safety documentation before enabling it.
 
 ## Priorities
 
-1. Complete v1.12.4 manual command, dry-run, and asteroid safety acceptance on an owner-controlled test server before publication.
+1. Complete v1.12.6 cleanup and player-clearance behavior on the deployment server.
 2. Add a read-only policy simulator that lists candidates, rule outcomes, protection reasons, and whether recovery is available.
 3. Validate backup/restore recovery when GridVault+ is missing, unavailable, or on an incompatible API version.
 
 These priorities are not release promises. See [CHANGELOG.md](CHANGELOG.md) for published behavior.
 
 
-## Candidate history
+## Release history
 
-v1.12.0 is available under releases/ with version-specific notes. v1.12.4 is the latest documented candidate; its named package remains local until owner validation and publication.
+Version-specific historical notes are under releases/. The current Cleaner+ package and behavior are documented in v1.12.6 release notes.

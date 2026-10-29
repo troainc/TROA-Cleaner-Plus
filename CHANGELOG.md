@@ -1,30 +1,36 @@
 # TROA Cleaner+ Changelog
 
-## v1.12.5 candidate — orphan asteroid storage cleanup (2026-10-29; not published)
+## v1.12.6 — Deep asteroid cleanup with player clearance (2026-10-29)
+
+- Adds 10 km online-player clearance to live asteroid cleanup and orphan `.vx2` pruning; keeps the existing 5 km grid clearance for live maps. If player-position data is unavailable, cleanup fails closed. With no online players, player-distance protection does not block cleanup.
+- Startup discovery and `!cleanerplusadmin asteroidstorage status|scan|prune` process recognized orphan asteroid/boulder storage. Pruning waits for work to drain and a successful save, verifies no active map reference, checks proximity, archives/verifies the file under `TROACleanerPlusData/RemovedVoxelStorage`, then removes the world-folder copy.
+- Unrecognized or unclassifiable orphan files remain untouched. Archived files remain recoverable and consume disk space.
+
+## v1.12.5 — orphan asteroid storage cleanup (2026-10-29)
 
 - Adds administrator `asteroidstorage status|scan|prune` commands.
 - Scans the loaded world folder for unreferenced recognized `Asteroid_` and optionally `Boulder-` `.vx2` files. Active voxel maps are excluded.
 - Before removal, waits for cleanup work to drain and a successful world save, checks live references again, archives and verifies each file under `TROACleanerPlusData/RemovedVoxelStorage`, and only then removes the world-folder copy. Archives remain recoverable and use disk space.
 - Startup discovery queues orphan storage for the same flow. Ordinary global dry-run does not block this explicit asteroid-storage pruning operation.
 
-## v1.12.4 candidate — manual cleanup controls and safety (2026-10-29; not published)
+## v1.12.4 — manual cleanup controls and safety (2026-10-29)
 
-Version-specific notes: [v1.12.4 candidate notes](releases/v1.12.4.md).
+Version-specific notes: [v1.12.4 release notes](releases/v1.12.4.md).
 
 - Documents the exact preview, targeted cleanup, and all-enabled-module commands; distinguishes automatic recovery sweeps from a manual deep cleanup.
 - Manual `!cleanerplusadmin now <module>` requires the Cleaner+ master switch and requested module to be enabled. Disabled modules are rejected with instructions instead of running as a manual override.
 - Clarifies that ordinary modules honor global dry-run, while asteroid/boulder voxel deletion does not; preview with `!cleanerplus scan asteroids` and disable asteroids before `now all` if they should be excluded.
-- Release artifact name: `TROA-CleanerPlus-v1.12.4-Manual-Cleanup-Safety.zip`. The package is a local candidate and has not been published as a GitHub binary release or validated in-game.
+- Release package: `TROA-CleanerPlus-v1.12.4-Manual-Cleanup-Safety.zip`. v1.12.4 was superseded by v1.12.6.
 
-## v1.12.3 candidate — asteroid cleanup and Overseer restart handoff (2026-10-29; not published)
+## v1.12.3 — asteroid cleanup and Overseer restart handoff (2026-10-29)
 
 - Restores scheduled whole-voxel cleanup for storage names beginning `Asteroid_` and, by default, `Boulder-`; scans after world load and every 120 minutes. Planets and unrecognized voxel storage remain excluded.
 - Protects asteroid/boulder maps whose full bounds are within the configurable default 5,000 m of any live grid. The same check runs immediately before removal, protecting asteroid-built player bases. Set `Asteroids_MinDistanceFromGrids` to `0` to disable the clearance.
 - Asteroid/boulder removal is permanent and has no backup or undo. It intentionally ignores global dry-run and age/player-distance gates; disable the module with `Asteroids_Enabled=false` or `!cleanerplusadmin off asteroids`.
-- Cleaner+ automatic restart defaults are disabled. Cleaner+ exposes a pre-restart cleanup handoff; the matching Admin Overseer candidate requests cleanup, waits for the explicit drained sentinel after enabled module scans and removal queues finish, then verifies a save, announces its 60-second countdown, and calls Torch's restart API. Cleanup remains Cleaner+ owned; restart timing remains Overseer owned. Linux/Wine AMP supervision and live behavior remain unverified.
-- The v1.12.3 and matching Overseer packages are candidates, not published binary releases. Live validation remains pending.
+- Cleaner+ automatic restart defaults are disabled. Cleaner+ exposes a pre-restart cleanup handoff; the matching Admin Overseer release requests cleanup, waits for the explicit drained sentinel after enabled module scans and removal queues finish, then verifies a save, announces its 60-second countdown, and calls Torch's restart API. Cleanup remains Cleaner+ owned; restart timing remains Overseer owned. Linux/Wine AMP supervision and live behavior remain unverified.
+- The v1.12.3 and matching Overseer packages introduced the original restart handoff. v1.12.6 is the current Cleaner+ release.
 
-## v1.12.0 - stability recovery candidate (2026-10-28)
+## v1.12.0 - stability recovery release (2026-10-28)
 
 - Uses elapsed time for SimSpeed checks, realtime cleanup scans, reveal checks, and concealment emergency qualification.
 - Adds opt-in protected trash recovery sweeps and admin recovery status/on/off commands.
@@ -37,7 +43,7 @@ Version-specific notes: [v1.12.4 candidate notes](releases/v1.12.4.md).
 
 Package and installation: [release notes](releases/v1.12.0.md). Live server validation is pending.
 
-## v1.11.1 — candidate, not yet released
+## v1.11.1 — release
 
 - Adds independent sustained SimSpeed alerts with defaults of `0.90` low, `0.65` critical, and `0.93` recovery.
 - Reports engine or metrics-file reading source; failed readings remain unavailable.
