@@ -16,3 +16,8 @@ Asteroid removal described in the README is a v1.8.0 development candidate and i
 4. Validate backup/restore recovery when GridVault+ is missing, unavailable, or on an incompatible API version.
 
 These priorities are not release promises. See [CHANGELOG.md](CHANGELOG.md) for published behavior.
+
+
+## 2026-10-28 stability candidate
+
+v1.12.0 is available under releases/ with version-specific notes. Live server validation is pending.

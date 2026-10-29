@@ -1,5 +1,18 @@
 # TROA Cleaner+ Changelog
 
+## v1.12.0 - stability recovery candidate (2026-10-28)
+
+- Uses elapsed time for SimSpeed checks, realtime cleanup scans, reveal checks, and concealment emergency qualification.
+- Adds opt-in protected trash recovery sweeps and admin recovery status/on/off commands.
+- Bounds scans per update, queued candidates, and removal attempts; deduplicates candidate IDs and shortens pending adaptive deadlines.
+- Rechecks key trash/player/grid protection and attachment conditions at removal; missing player proximity defers affected cleanup.
+- Dry-run no longer resets entity ages or increments removal totals.
+- Fixes concealment group identity, partial-failure tracking, projector state handling, and retry retention on failed reveal; moving grids are excluded.
+- Defaults to one healthy recovery sample and breaks confirmation runs on missing readings.
+- Packages directly into releases/. Live validation remains pending with the owner.
+
+Package and installation: [release notes](releases/v1.12.0.md). Live server validation is pending.
+
 ## v1.11.1 — candidate, not yet released
 
 - Adds independent sustained SimSpeed alerts with defaults of `0.90` low, `0.65` critical, and `0.93` recovery.

@@ -9,11 +9,17 @@ it keep the world clean without downtime.
 
 ## Current development package
 
-- Candidate manifest, assembly, project, and package version: `v1.11.1`.
-- The current public release remains v1.10.0. The v1.11.1 candidate ZIP has been built and is pending Torch test-server validation before release; see the SimSpeed response section and changelog.
+- Candidate manifest, assembly, project, and package version: `v1.12.0`.
+- The current public release remains v1.10.0. The v1.12.0 candidate ZIP has been built and is pending Torch test-server validation before release; see the SimSpeed response section and changelog.
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
+
+## New stability package: v1.12.0
+
+[Download TROA-CleanerPlus-v1.12.0.zip](releases/TROA-CleanerPlus-v1.12.0.zip) | [Release notes and configuration](releases/v1.12.0.md) | [Checksum](releases/TROA-CleanerPlus-v1.12.0.zip.sha256)
+
+Adds elapsed-time recovery response, protected optional trash recovery sweeps, bounded cleanup scheduling, and concealment/reveal fixes. Build completed; live server testing is pending. Start with `!cleanerplusadmin recovery status` after installing the package.
 
 ## The TROA grid keep policy
 
