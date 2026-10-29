@@ -69,7 +69,7 @@ A targeted manual run uses `!cleanerplusadmin now <module>`. The Cleaner+ master
 | `!cleanerplus scan floatingobjects` | Preview floating-object candidates without deletion. |
 | `!cleanerplusadmin now floatingobjects` | Queue a targeted ordinary-module pass if master and module are ON; dry-run and eligibility gates apply. |
 | `!cleanerplusadmin dryrun on` | Preview eligible removals without deleting. |
-| `!cleanerplusadmin dryrun off` | Permit real removal under the configured cleanup policies. This applies globally, including other enabled cleanup modules. |
+| `!cleanerplusadmin dryrun off` | Permit real removal under ordinary-module cleanup policies. It does not enable or gate the separate asteroid cleanup path. |
 
 Recovery sweeps are separate from manual `now all`. They apply only to enabled automatic floating-object and corpse modules; they do not clean grids, NPC grids, respawn ships, or asteroids and do not override dry-run. `recovery on` does not enable disabled modules, change command-only modes, turn dry-run off, or enable concealment. No grid is selected for removal solely because SimSpeed is low.
 
