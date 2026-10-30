@@ -4,7 +4,7 @@ Cleaner+ is a Torch-side world maintenance plugin. Players do not install a clie
 
 ## Install and begin safely
 
-Install the v1.12.6 release and start once to generate the server config/data paths. Keep built-in protections and `GlobalDryRun` enabled while checking server rules. `!cleanerplus scan [module]` previews qualifying cleanup candidates and never deletes. Manual cleanup requires Cleaner+ master and the requested module to be ON. Asteroid/boulder voxel cleanup bypasses global dry-run. Review Torch logs before turning dry-run off. Reload changed configuration with `!cleanerplusadmin reload`; ordinary module and mode changes do not need a restart.
+Install the v1.12.7 release and start once to generate the server config/data paths. Keep built-in protections and `GlobalDryRun` enabled while checking server rules. `!cleanerplus scan [module]` previews qualifying cleanup candidates and never deletes. Manual cleanup requires Cleaner+ master and the requested module to be ON. Asteroid/boulder voxel cleanup bypasses global dry-run. Review Torch logs before turning dry-run off. Reload changed configuration with `!cleanerplusadmin reload`; ordinary module and mode changes do not need a restart.
 
 ## Cleanup families and grid keep rules
 

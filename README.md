@@ -9,9 +9,10 @@ it keep the world clean without downtime.
 
 ## Current release
 
-- Current Cleaner+ release: `v1.12.6` (Deep Asteroid Cleanup and Player Clearance).
-- v1.12.6 adds online-player proximity protection and save-confirmed, archive-before-remove cleanup for orphan asteroid `.vx2` files. See the v1.12.6 changelog entry and admin command reference.
-- See the [v1.12.6 release notes](releases/v1.12.6.md), manual cleanup section, and changelog.
+- Current Cleaner+ release: `v1.12.7` (Bifrost Read-Only Cleanup Preview).
+- v1.12.7 adds an explicit, Owner/Admin-triggered Bifrost preview API that scans cleanup candidates and returns aggregate counts only. It does not expose candidate identities, positions, owners, or archive paths, and it cannot queue or perform cleanup.
+- See the [v1.12.7 release notes](releases/v1.12.7.md), manual cleanup section, and changelog.
+- Download the [v1.12.7 release ZIP](releases/TROA-CleanerPlus-v1.12.7-Bifrost-Read-Only-Cleanup-Preview.zip).
 - Runtime: Torch / .NET Framework 4.8
 - Hosting: Windows and Linux-hosted AMP/Wine servers
 - UI: none; all operation is command-, config-, and file-based
@@ -65,7 +66,7 @@ Low SimSpeed does not by itself start ordinary grid cleanup or restart the serve
 
 This means a drop below `0.65` does not trigger the default emergency behavior. The planned shared response uses `0.90` as the low-speed threshold, with sustained sampling, recovery hysteresis, and safeguards. See [the cross-plugin SimSpeed response plan](../SIM-SPEED-RESPONSE-PLAN.md) before changing live behavior.
 
-## Manual cleanup commands (v1.12.6 release)
+## Manual cleanup commands (v1.12.7 release)
 
 First check status and preview each target. Scans are read-only and list cleanup candidates that qualify now:
 
@@ -90,7 +91,7 @@ For ordinary cleanup, `!cleanerplusadmin now <module>` queues a targeted pass on
 | Floating objects | `floatingobjects` | on | Dropped ore/component stacks older than `FloatingObjects_MaxAgeMinutes`, optionally sparing large stacks and objects near players. |
 | Grids | `grids` | on | Grids that fail the keep policy, plus (optionally) ownerless grids and grids with no functional blocks. Static grids are excluded unless enabled. Connected subgrids are treated as one unit. |
 | Dead characters | `corpses` | off | Dead character bodies older than `Corpses_MaxAgeMinutes`. |
-| Asteroids (v1.12.6 release) | `asteroids` | on | Whole voxel maps named with the `Asteroid_` prefix and, by default, `Boulder-`; maps whose full bounds are within the configured clearance of a live grid are kept. The v1.12.6 release adds player-distance protection; removal bypasses age and global dry-run. Removal is permanent: no backup or undo. |
+| Asteroids (v1.12.7 release) | `asteroids` | on | Whole voxel maps named with the `Asteroid_` prefix and, by default, `Boulder-`; maps whose full bounds are within the configured clearance of a live grid are kept. The v1.12.7 release adds player-distance protection; removal bypasses age and global dry-run. Removal is permanent: no backup or undo. |
 | Respawn ships | `respawnships` | off | Unclaimed default respawn ships or pods matching configured name patterns and age. |
 | NPC grids | `npcgrids` | off | Stale NPC, pirate, cargo, or encounter grids, subject to age, distance, and keep-block rules. |
 

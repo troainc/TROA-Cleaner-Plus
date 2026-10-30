@@ -1,6 +1,6 @@
 # TROA Cleaner+ Command Reference
 
-This reference covers the Cleaner+ v1.12.6 and earlier releases; command availability and behavior depend on the installed DLL. Commands use Torch chat syntax. Preview before any cleanup.
+This reference covers the Cleaner+ v1.12.7 and earlier releases; command availability and behavior depend on the installed DLL. Commands use Torch chat syntax. Preview before any cleanup. The v1.12.7 Bifrost integration is a read-only aggregate preview API, not a chat command or cleanup trigger.
 
 ## Player and moderator commands
 
@@ -42,7 +42,7 @@ This reference covers the Cleaner+ v1.12.6 and earlier releases; command availab
 
 Modules: `floatingobjects`, `grids`, `corpses`, `respawnships`, `npcgrids`, and (in supported builds) `asteroids`.
 
-## Manual cleanup — v1.12.6 release
+## Manual cleanup — v1.12.7 release
 
 Begin with previews:
 
@@ -60,7 +60,7 @@ Every `scan` is read-only. A disabled module returns no candidates, so check its
 
 A targeted manual run uses `!cleanerplusadmin now <module>`. The Cleaner+ master switch and requested module must both be ON. With global dry-run ON, ordinary modules report eligible candidates without deleting. `!cleanerplusadmin now all` queues every enabled module.
 
-**Asteroid exception:** the v1.12.6 release permanently removes eligible whole `Asteroid_` maps and, by default, `Boulder-` maps. Voxel removal has no backup or undo and bypasses global dry-run. Review `!cleanerplus scan asteroids` first. Run `!cleanerplusadmin off asteroids` before `!cleanerplusadmin now all` to exclude voxel cleanup. Do not run `now asteroids` or `now all` unless permanent asteroid/boulder removal is intended.
+**Asteroid exception:** v1.12.6 and later permanently remove eligible whole `Asteroid_` maps and, by default, `Boulder-` maps. Voxel removal has no backup or undo and bypasses global dry-run. Review `!cleanerplus scan asteroids` first. Run `!cleanerplusadmin off asteroids` before `!cleanerplusadmin now all` to exclude voxel cleanup. Do not run `now asteroids` or `now all` unless permanent asteroid/boulder removal is intended.
 
 ## Recovery commands
 
@@ -76,7 +76,7 @@ A targeted manual run uses `!cleanerplusadmin now <module>`. The Cleaner+ master
 
 Recovery sweeps are separate from manual `now all`. They apply only to enabled automatic floating-object and corpse modules; they do not clean grids, NPC grids, respawn ships, or asteroids and do not override dry-run. `recovery on` does not enable disabled modules, change command-only modes, turn dry-run off, or enable concealment. No grid is selected for removal solely because SimSpeed is low.
 
-The v1.12.0 release notes describe that version's historical behavior. In the v1.12.6 release, asteroid removal ignores dry-run; dry-run ON is not a global no-deletion guarantee.
+The v1.12.0 release notes describe that version's historical behavior. In v1.12.6 and later, asteroid removal ignores dry-run; dry-run ON is not a global no-deletion guarantee.
 
 ## Restore and restart operations
 

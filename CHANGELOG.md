@@ -1,5 +1,12 @@
 # TROA Cleaner+ Changelog
 
+## v1.12.7 — Bifrost read-only cleanup preview (2026-10-30)
+
+- Adds `GetBifrostPanelCleanupPreviewJson()` for Admin Overseer to explicitly request a read-only cleanup scan on Torch's game thread.
+- Returns aggregate candidate counts only. It does not expose candidate IDs/names/owners/positions/archive paths, queue cleanup, or delete anything. Overseer displays the result as a preview; Cleaner+ retains all cleanup ownership.
+- Release build completed with zero warnings/errors. Linux/Wine runtime acceptance remains operator-side.
+- Package: `TROA-CleanerPlus-v1.12.7-Bifrost-Read-Only-Cleanup-Preview.zip`; 102,927 bytes; SHA-256 `B56EECEA6A983CC0C4BFB15EADB7839AB0E9CE28A896E3509B26FC8A7FD07FA8`.
+
 ## v1.12.6 — Deep asteroid cleanup with player clearance (2026-10-29)
 
 - Adds 10 km online-player clearance to live asteroid cleanup and orphan `.vx2` pruning; keeps the existing 5 km grid clearance for live maps. If player-position data is unavailable, cleanup fails closed. With no online players, player-distance protection does not block cleanup.
